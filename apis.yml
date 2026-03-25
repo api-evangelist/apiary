@@ -1,0 +1,39 @@
+aid: apiary
+name: Apiary
+description: >-
+  Apiary is an API design and documentation platform that uses API Blueprint and
+  Swagger/OpenAPI to produce interactive API references and mock servers.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Documentation
+  - API Design
+  - Mock Servers
+url: >-
+  https://raw.githubusercontent.com/api-evangelist/apiary/refs/heads/main/apis.yml
+created: '2026-03-25'
+modified: '2026-03-25'
+specificationVersion: '0.19'
+apis:
+  - aid: apiary:apiary
+    name: Apiary
+    description: >-
+      Apiary is an API design and documentation platform that uses API Blueprint and
+      Swagger/OpenAPI to produce interactive API references and mock servers.
+    humanURL: https://apiary.io
+    tags:
+      - Documentation
+      - API Design
+    properties:
+      - type: Documentation
+        url: https://help.apiary.io
+      - type: Getting Started
+        url: https://help.apiary.io/tools/apiary-cli/
+common:
+  - type: Website
+    url: https://apiary.io
+  - type: Documentation
+    url: https://help.apiary.io
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
