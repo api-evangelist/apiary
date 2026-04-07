@@ -10,10 +10,10 @@ description: >-
 type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-  - Documentation
-  - API Design
-  - Mock Servers
   - API Blueprint
+  - API Design
+  - Documentation
+  - Mock Servers
   - Oracle
 url: >-
   https://raw.githubusercontent.com/api-evangelist/apiary/refs/heads/main/apis.yml
@@ -30,9 +30,9 @@ apis:
       and integrating Apiary workflows into CI/CD pipelines.
     humanURL: https://apiary.io
     tags:
+      - API Blueprint
       - API Design
       - Documentation
-      - API Blueprint
       - Mock Servers
     properties:
       - type: Documentation
@@ -53,8 +53,8 @@ apis:
     tags:
       - API Blueprint
       - API Design
-      - Specification
       - Documentation
+      - Specification
     properties:
       - type: Documentation
         url: https://apiblueprint.org/documentation/
