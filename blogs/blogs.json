@@ -1,0 +1,13 @@
+{
+  "repo": "apiary",
+  "feeds": [
+    {
+      "source": "https://blog.apiary.io",
+      "feed_url": "https://blog.apiary.io/feed.xml",
+      "saved": 10,
+      "title": "The Apiary Blog"
+    }
+  ],
+  "post_count": 10,
+  "fetched": "2026-05-03T23:22:12Z"
+}
