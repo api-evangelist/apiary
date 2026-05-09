@@ -3,11 +3,11 @@
   "feeds": [
     {
       "source": "https://blog.apiary.io",
-      "feed_url": "https://blog.apiary.io/feed.xml",
-      "saved": 10,
-      "title": "The Apiary Blog"
+      "feed_url": "https://blog.apiary.io/feed/",
+      "title": "The Apiary Blog",
+      "saved": 0
     }
   ],
   "post_count": 10,
-  "fetched": "2026-05-03T23:22:12Z"
+  "fetched": "2026-05-09T20:17:51Z"
 }
