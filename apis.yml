@@ -66,6 +66,8 @@ apis:
       - type: Specification
         url: https://apiblueprint.org/documentation/specification.html
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/apiary-io
   - type: Website
     url: https://apiary.io
   - type: Documentation
