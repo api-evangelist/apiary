@@ -80,7 +80,7 @@ common:
     url: https://apiary.io/plans
   - type: Login
     url: https://login.apiary.io
-  - type: SignUp
+  - type: Signup
     url: https://login.apiary.io/register
   - type: Support
     url: https://help.apiary.io
