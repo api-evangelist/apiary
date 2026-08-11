@@ -78,6 +78,13 @@ apis:
       - type: Specification
         url: https://apiblueprint.org/documentation/specification.html
 common:
+  - type: IssueTracker
+    url: https://github.com/apiaryio/api-blueprint/issues
+  - type: Releases
+    url: https://github.com/apiaryio/api-blueprint/releases
+  - type: License
+    name: MIT
+    url: https://github.com/apiaryio/api-blueprint/blob/master/LICENSE
   - type: DomainSecurity
     url: security/apiary-domain-security.yml
   - type: LinkedIn
