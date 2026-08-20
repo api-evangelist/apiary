@@ -26,6 +26,15 @@ tags:
   - API Design
   - API Testing
   - Collaboration
+  - Design-First
+  - Documentation
+  - Mock Servers
+  - Oracle
+tags_raw:
+  - API Blueprint
+  - API Design
+  - API Testing
+  - Collaboration
   - Design First
   - Documentation
   - Mock Servers
@@ -65,6 +74,12 @@ apis:
       tests from a single source of truth.
     humanURL: https://apiblueprint.org
     tags:
+      - API Blueprint
+      - API Design
+      - Documentation
+      - Open-Source
+      - Specification
+    tags_raw:
       - API Blueprint
       - API Design
       - Documentation
