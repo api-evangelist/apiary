@@ -8,6 +8,19 @@ description: >-
   workflows. Apiary enables teams to design APIs before writing code, generate
   documentation automatically, and validate implementations against specifications.
 type: Index
+deliveryModel:
+  model: open-core
+  license: MIT
+  open_source: true
+  commercial: true
+  callable_host: false
+  label: Open core · an OSS project plus a commercial hosted product
+  confidence: high
+  source:
+  - license
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: unknown
