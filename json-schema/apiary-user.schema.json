@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string"
+    },
+    "userName": {
+      "type": "string"
+    },
+    "userApisUrl": {
+      "type": "string"
+    },
+    "teams": {
+      "type": "array"
+    }
+  }
+}

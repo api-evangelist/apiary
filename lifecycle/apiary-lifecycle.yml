@@ -1,0 +1,120 @@
+generated: '2026-09-02'
+method: searched
+source: >-
+  https://apiary.io/plans, https://help.apiary.io/faq/apiary-manifest/,
+  https://apiary.docs.apiary.io/feed, https://github.com/apiaryio,
+  and the Apiary API description at https://jsapi.apiary.io/apis/apiary.
+provider: Apiary
+providerId: apiary
+description: >-
+  Versioning, deprecation and operational-signal posture for Apiary. The service is
+  live and answering, but every lifecycle signal points the same direction: the API
+  is unversioned and unchanged since 2019, the free tier is marked deprecated, one
+  whole resource group is labelled legacy by Apiary itself, and the open-source
+  estate around the product was archived in November 2024.
+versioning:
+  scheme: none
+  path_version: false
+  header_version: false
+  media_type_version: false
+  detail: >-
+    The Apiary API declares no version anywhere — not in the path, not in a header,
+    not in a media type. There is no documented version-negotiation mechanism, so
+    there is also no mechanism by which Apiary could ship a breaking change without
+    breaking every existing client at once.
+deprecation_policy:
+  published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  detail: >-
+    No deprecation policy document, no notice period, and no RFC 8594 `Sunset` or
+    `Deprecation` response headers are declared on any operation. Apiary marks things
+    deprecated in prose on the page that describes them, and gives no dates.
+deprecated:
+  - subject: Free plan
+    kind: plan
+    status: deprecated
+    date_announced: null
+    sunset_date: null
+    source: https://apiary.io/plans
+    detail: >-
+      Apiary labels the Free tier "Deprecated" on its own live pricing page. No
+      end-of-life date, no migration guidance and no notice period is published
+      alongside it.
+  - subject: /blueprint/* resource group
+    kind: api-operations
+    status: legacy
+    operations: [createApiProject, fetchBlueprint, publishBlueprint]
+    date_announced: null
+    sunset_date: null
+    source: https://jsapi.apiary.io/apis/apiary
+    detail: >-
+      Apiary's own API description opens the Blueprint group with "Apiary API exposes
+      legacy API Blueprint utilities" and describes the `Authentication: Token`
+      header as "our legacy, authorization token HTTP header". No replacement is
+      named. This is a live problem for integrators, because these three operations
+      are the ONLY ones that read or write API description documents — the entire
+      reason to call this API — and they are the ones marked legacy. The Apiary CLI
+      itself depends on them.
+  - subject: apiary.manifest multi-file support
+    kind: feature
+    status: deprecated
+    date_announced: null
+    sunset_date: null
+    source: https://help.apiary.io/faq/apiary-manifest/
+    detail: >-
+      "This method has been deprecated and is not recommended." Already disabled for
+      new API Projects using GitHub Sync or GitHub Integration. Apiary states there
+      is "no timeline yet to migrate customers currently using it" — deprecated with
+      an explicitly undefined sunset. Recommended replacements: Hercule transclusion
+      in CI, or MSON data structures.
+  - subject: apiaryio open-source organization
+    kind: tooling
+    status: archived
+    date_announced: '2024-11-08'
+    sunset_date: null
+    source: https://github.com/apiaryio
+    detail: >-
+      The GitHub organization behind API Blueprint, Dredd, Gavel, Drafter,
+      Protagonist and api-elements.js was archived on 2024-11-08; the repositories are
+      read-only. Latest first-party package releases are 2021 (dredd 14.1.0,
+      2021-11-16; apiaryio gem 0.17.0, 2021-10-21), with protagonist 2.3.0
+      (2023-07-28) the sole later exception. See packages/apiary-packages.yml.
+status_page:
+  published: false
+  url: null
+  detail: >-
+    Apiary publishes no status page. status.apiary.io redirects to
+    status.apiary-mock.com and returns 404 (probed 2026-09-02); apiary.io/status
+    returns 404. No incident history, no uptime record, no subscribe-to-incidents
+    surface. Oracle's general cloud status pages do not cover Apiary as a named
+    service.
+sla:
+  published: false
+  detail: >-
+    No SLA, uptime target or support-response commitment is published for the API.
+    The only response-time commitment anywhere on apiary.io/plans is "Priority
+    Support — Guaranteed 24x7 response times" on the Pro plan, which is a support
+    commitment, not an availability one, and carries no stated response interval.
+change_signals:
+  - name: Apiary API change feed
+    type: atom
+    url: https://apiary.docs.apiary.io/feed
+    last_entry: '2019-07-25'
+    detail: >-
+      A real, machine-readable change feed for the API itself. See
+      changelog/apiary-changelog.yml.
+  - name: Apiary blog
+    type: rss
+    url: https://blog.apiary.io/feed.xml
+    last_entry: '2019-02-06'
+deprecated_operations_in_spec: []
+deprecated_operations_note: >-
+  No operation in the contract carries `deprecated: true`. The legacy status of the
+  /blueprint/* group is stated in prose in the group description only — a machine
+  reading the contract would not see it. Recorded here rather than stamped onto the
+  derived OpenAPI, because Apiary did not stamp it.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

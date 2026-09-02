@@ -1,0 +1,197 @@
+generated: '2026-09-02'
+method: derived
+source: >-
+  Apiary's own published API description (https://jsapi.apiary.io/apis/apiary,
+  HTTP 200, fetched 2026-09-02), the derived
+  openapi/apiary-apiary-api-openapi.yml, and help.apiary.io.
+provider: Apiary
+providerId: apiary
+description: >-
+  Cross-cutting and domain-standard conformance assertions for the Apiary API. Every
+  entry below is judged against what the CONTRACT declares, not against marketing
+  copy. Where Apiary claims nothing, the entry records `conforms: false` with the
+  evidence of absence rather than being omitted.
+conformance:
+  - id: rfc6750
+    name: OAuth 2.0 Bearer Token Usage
+    conforms: true
+    evidence:
+      - >-
+        The Authentication resource group description in Apiary's own API description
+        opens: "Apiary API uses Bearer Token Authorization" and links
+        https://tools.ietf.org/html/rfc6750 directly.
+      - >-
+        GET /me, GET /me/apis and GET /me/teams/{teamId}/apis take
+        `Authorization: Bearer <token>` and answer an invalid token with 401 plus
+        `WWW-Authenticate: Bearer error="invalid_token"` — the RFC 6750 challenge
+        form, correctly emitted.
+    scope: partial
+    scope_note: >-
+      Bearer token USAGE (§2.1 and §3) is conformant. The token is not an OAuth 2.0
+      access token — there is no authorization server, no grant flow, no scopes, no
+      expiry and no refresh. It is a long-lived personal access token carried in the
+      Bearer scheme.
+  - id: rfc7617
+    name: HTTP Basic Authentication
+    conforms: true
+    evidence:
+      - >-
+        POST/GET/DELETE /authorization accept `Authorization: Basic <base64>` with
+        the account email and password; Apiary publishes a worked Base64 example and
+        curl `--user` invocations in the group description.
+  - id: oauth2
+    name: OAuth 2.0 authorization framework
+    conforms: false
+    evidence:
+      - >-
+        No oauth2 securityScheme in the contract; no authorization endpoint, token
+        endpoint, grant type, scope or refresh token is documented anywhere. All six
+        /.well-known/oauth-authorization-server and
+        /.well-known/oauth-protected-resource probes returned 404 (see
+        well-known/apiary-well-known.yml).
+  - id: oidc
+    name: OpenID Connect
+    conforms: false
+    evidence:
+      - /.well-known/openid-configuration returned 404 on all six Apiary hosts, 2026-09-02.
+      - >-
+        Apiary's API description does note that some accounts are governed by
+        IDCS-controlled teams (Oracle Identity Cloud Service), and that the
+        /authorization Basic-auth flow does not work for those users — but no OIDC
+        discovery document or federated flow is exposed on any Apiary host.
+  - id: rfc9457
+    name: Problem Details for HTTP APIs
+    conforms: false
+    evidence:
+      - >-
+        No operation declares application/problem+json. Errors use two bespoke
+        envelopes, `{"error": "<enum>"}` and `{"error": <bool>, "message": "<text>"}`.
+        See errors/apiary-problem-types.yml.
+  - id: rfc9331
+    name: RateLimit header fields for HTTP
+    conforms: false
+    evidence:
+      - >-
+        The one documented rate limit (Mock Server) signals with vendor-prefixed
+        `X-Apiary-Ratelimit-Limit` and `X-Apiary-Ratelimit-Remaining`, not
+        `RateLimit-Limit`/`RateLimit-Remaining`/`RateLimit-Reset`. No reset field of
+        any kind is published.
+  - id: rfc8594
+    name: The Sunset HTTP Header Field
+    conforms: false
+    evidence:
+      - >-
+        No Sunset or Deprecation header on any operation, despite Apiary labelling
+        the entire /blueprint/* group "legacy" and the Free plan "Deprecated" in
+        prose. See lifecycle/apiary-lifecycle.yml.
+  - id: idempotency
+    name: Idempotent request keys
+    conforms: false
+    evidence:
+      - >-
+        No Idempotency-Key or equivalent on POST /blueprint/publish or POST
+        /blueprint/create, the two operations where a duplicate is destructive.
+  - id: pagination
+    name: Collection pagination
+    conforms: false
+    evidence:
+      - >-
+        `tokens[]` and `apis[]` are returned as unbounded arrays with no limit,
+        offset, cursor or Link header declared on any of the three list operations.
+  - id: json-schema-draft-04
+    name: JSON Schema draft-04
+    conforms: true
+    evidence:
+      - >-
+        Apiary publishes a `$schema: http://json-schema.org/draft-04/schema#` document
+        alongside every JSON response in its API description. Six distinct schemas
+        extracted verbatim to json-schema/.
+    note: >-
+      draft-04 is superseded (2020-12 is current), consistent with the contract's
+      2020 vintage.
+  - id: tls-required
+    name: Transport encryption enforced
+    conforms: true
+    evidence:
+      - >-
+        Six of nine operations declare a 403 `Transport Layer Security Required`
+        response, and the User Information group states "You must use encryption
+        (i.e., HTTPS)." HSTS is served on apiary.io with max-age 604800 (see
+        security/apiary-domain-security.yml).
+domain_standards:
+  - id: api-blueprint
+    name: API Blueprint
+    market: API description and documentation tooling
+    conforms: true
+    role: author
+    evidence:
+      - >-
+        The contract declares its own format in-band: the Apiary API description
+        document returns `"apiDescriptionFormat": "apiblueprint"` at
+        https://jsapi.apiary.io/apis/apiary. Apiary describes its own API in the
+        standard it publishes.
+      - >-
+        Apiary is the author and steward of the API Blueprint specification —
+        https://apiblueprint.org/documentation/specification.html (HTTP 200,
+        2026-09-02), source at https://github.com/apiaryio/api-blueprint.
+      - >-
+        The API's own write surface is format-native: POST /blueprint/publish takes a
+        `code` field whose published example is `FORMAT: X-1A\nHOST: ...` — an API
+        Blueprint document header.
+    caveat: >-
+      The specification repository has been archived on GitHub since 2024-11-08 and
+      the parsers (drafter, protagonist, drafter.js) are archived with it. Apiary
+      conforms to a standard it authored and no longer actively maintains.
+  - id: api-elements
+    name: API Elements (refract)
+    market: API description and documentation tooling
+    conforms: true
+    role: author
+    evidence:
+      - >-
+        The description document Apiary serves for its own API is API Elements on the
+        wire — `dataStructures[]` entries are refract elements
+        (`{"element": "dataStructure"}`, `{"element": "member"}`,
+        `{"element": "enum"}`) carrying `sourceMap` attributes, observed directly in
+        the 2026-09-02 fetch.
+      - Reference implementation published by Apiary as npm `api-elements` (0.3.2, 2020-09-23).
+  - id: mson
+    name: MSON (Markdown Syntax for Object Notation)
+    market: API description and documentation tooling
+    conforms: true
+    role: author
+    evidence:
+      - >-
+        The seven named data structures in Apiary's own contract — Error, Token,
+        Token List, Team, User, API, API List — are MSON types with per-member
+        descriptions, which is what the derived data-model/ artifact reads.
+      - Tutorial published at https://help.apiary.io/api_101/mson-tutorial/.
+  - id: openapi
+    name: OpenAPI Specification (Swagger)
+    market: API description and documentation tooling
+    conforms: partial
+    role: consumer
+    evidence:
+      - >-
+        Apiary supports OpenAPI/Swagger as a first-class description format for
+        CUSTOMER projects — every plan on https://apiary.io/plans lists "API Blueprint
+        and OpenAPI (Swagger) formats", OpenAPI 3.0 support was announced 2019-02-06,
+        and `apiary fetch --output="swagger.yaml"` returns a customer's Swagger
+        document.
+    caveat: >-
+      Apiary does NOT describe its OWN API in OpenAPI. /openapi.json, /openapi.yaml,
+      /swagger.json, /api-docs, /docs and /redoc all returned 404 on api.apiary.io on
+      2026-09-02. The OpenAPI in this repository is a derived translation of Apiary's
+      API Blueprint description, not a harvest. An API-description vendor that does
+      not publish its own API in the industry's dominant description format is the
+      single most consequential finding of this pass.
+not_applicable:
+  - {id: fhir, reason: not a healthcare provider}
+  - {id: fapi, reason: not a financial-grade API}
+  - {id: psd2, reason: not a payment service provider}
+  - {id: scim, reason: no identity provisioning surface}
+  - {id: odata, reason: no OData $metadata surface}
+  - {id: json-api, reason: does not use the JSON:API media type}
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

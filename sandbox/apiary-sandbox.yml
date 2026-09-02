@@ -1,0 +1,75 @@
+generated: '2026-09-02'
+method: searched
+source: https://help.apiary.io/tools/mock-server/
+provider: Apiary
+providerId: apiary
+description: >-
+  Apiary's sandbox story is unusual and worth stating precisely: Apiary does not run
+  a test mode for its OWN API (api.apiary.io has no sandbox host, no test key prefix
+  and no test/live mode). What Apiary sells IS a sandbox — a mock server generated
+  automatically from every published API description, which is the thing customers
+  point their own integrations at while a real backend does not yet exist.
+own_api_sandbox:
+  available: false
+  note: >-
+    The Apiary API description document (fetched from jsapi.apiary.io/apis/apiary,
+    2026-09-02) declares one server, https://api.apiary.io/, and no test variant.
+    Tokens issued at https://login.apiary.io/tokens carry no test/live prefix, and
+    the docs describe no test mode, no test clock and no fixture tooling. Calls to
+    /blueprint/publish act on the customer's real published documentation
+    immediately.
+product_sandbox:
+  name: Apiary Mock Server
+  available: true
+  docs: https://help.apiary.io/tools/mock-server/
+  how_it_is_created: >-
+    "The Mock Server is automatically created each time you publish your API
+    Description." No configuration step — publishing is provisioning.
+  url_shape: https://private-<traffic-secret>-<subdomain>.apiary-mock.com/
+  url_note: >-
+    Each viewer of the documentation is issued their own private mock URL so that
+    other users cannot see their traffic. Apiary warns plainly: "Anyone who has your
+    private URL will have access to your requests." Anonymous viewers get a
+    `private-anon-<secret>-<subdomain>` host; the secret rotates per session.
+  observed_example:
+    url: https://private-anon-8f63a7f22a-apiary.apiary-mock.com/
+    observed_at: '2026-09-02'
+    observed_in: >-
+      the `urls.mock` field of https://jsapi.apiary.io/apis/apiary — Apiary's own
+      API Project, serving its own mock. The secret shown is session-scoped and
+      regenerates on every fetch.
+  companion_urls:
+    proxy: https://private-<traffic-secret>-<subdomain>.apiary-proxy.com/
+    production: the customer's own declared production host
+  response_selection:
+    mechanism: Prefer header
+    header: 'Prefer: status=<code>'
+    description: >-
+      Where an API description defines several responses for one action, the mock
+      server returns the first unless the request carries a `Prefer` header naming
+      the wanted status.
+    example: 'Prefer: status=404'
+  rate_limits:
+    anonymous: 120 requests per minute
+    authenticated: 5000 requests per minute
+    headers:
+      - X-Apiary-Ratelimit-Limit
+      - X-Apiary-Ratelimit-Remaining
+    detail: rate-limits/apiary-rate-limits.yml
+  test_values_published: false
+  test_value_note: >-
+    There are no published test cards, test bank accounts or fixture tokens — Apiary
+    is not a payments or identity provider, and the mock server's responses are
+    whatever the customer wrote into their own API description document.
+related_tooling:
+  - name: Debugging Proxy
+    description: Routes console traffic through Apiary so requests and responses can be inspected against the contract.
+    docs: https://help.apiary.io/tools/api-inspector/
+  - name: Dredd
+    description: >-
+      Apiary's open-source contract-testing runner, used to assert a real
+      implementation against the same description that generated the mock.
+    docs: https://help.apiary.io/tools/automated-testing/testing-local/
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

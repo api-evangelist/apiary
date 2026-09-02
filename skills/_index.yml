@@ -1,0 +1,60 @@
+generated: '2026-09-02'
+method: generated
+source: >-
+  Authored by API Evangelist from openapi/apiary-apiary-api-openapi.yml and
+  help.apiary.io. Apiary publishes no skills, no AGENTS.md and no llms.txt of its
+  own (all probed 404 on 2026-09-02), so these are generated, not harvested. Every
+  operationId referenced below appears verbatim in the contract.
+provider: Apiary
+providerId: apiary
+api: apiary:apiary-api
+description: >-
+  Packaged Agent Skills for the Apiary API. Three skills cover all nine published
+  operations, split along the line that actually matters for an agent: what is safe
+  to read, what is destructive to write, and what requires account credentials
+  rather than a token.
+skills:
+  - name: apiary-fetch-api-description
+    file: apiary-fetch-api-description.md
+    summary: Discover an API Project and read its published API description document.
+    risk: read-only
+    auth: bearer token (steps 1-3) then legacy Authentication:Token header (step 4)
+    operations: [getMe, listMyApis, listTeamApis, fetchBlueprint]
+  - name: apiary-publish-api-description
+    file: apiary-publish-api-description.md
+    summary: Publish an updated API description document safely, with a mandatory backup step.
+    risk: destructive
+    auth: legacy Authentication:Token header
+    operations: [listMyApis, fetchBlueprint, publishBlueprint]
+    warning: >-
+      Replaces the published revision with no server-side undo and no idempotency key.
+      The skill requires a fetchBlueprint backup before writing and forbids blind
+      retries on 500/503.
+  - name: apiary-manage-authorization-tokens
+    file: apiary-manage-authorization-tokens.md
+    summary: Mint, list, rotate and revoke tokens.
+    risk: credential-handling
+    auth: HTTP Basic account email and password
+    operations: [createAuthorizationToken, listAuthorizationTokens, deleteAuthorizationToken]
+    warning: >-
+      Requires the account password, not a token, and does not work for accounts in
+      Oracle IDCS-controlled teams.
+coverage:
+  operations_total: 9
+  operations_covered: 9
+uncovered_operations:
+  - operationId: createApiProject
+    reason: >-
+      Deliberately not given its own skill. It is not idempotent, a taken desiredName
+      is silently reassigned, and the Apiary API has NO delete operation — an agent
+      that creates a project cannot clean up after itself, and web-UI deletion is
+      documented as irreversible. It is described as a hazard inside
+      apiary-publish-api-description.md instead.
+cross_references:
+  conventions: ../conventions/apiary-conventions.yml
+  errors: ../errors/apiary-problem-types.yml
+  rate_limits: ../rate-limits/apiary-rate-limits.yml
+  data_model: ../data-model/apiary-data-model.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

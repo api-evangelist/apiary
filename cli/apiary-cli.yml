@@ -1,0 +1,79 @@
+generated: '2026-09-02'
+method: searched
+source: https://help.apiary.io/tools/apiary-cli/
+provider: Apiary
+providerId: apiary
+name: Apiary CLI
+description: >-
+  Apiary ships a first-party command line client, distributed as the `apiaryio`
+  Ruby gem. It is the only Apiary-published package that calls the Apiary API. It
+  fetches and publishes API description documents (API Blueprint `.apib` or
+  Swagger/OpenAPI `swagger.yaml`) and renders a local preview of the interactive
+  documentation without publishing.
+binary: apiary
+repository: https://github.com/apiaryio/apiary-client
+license: MIT
+docs: https://help.apiary.io/tools/apiary-cli/
+package: packages/apiary-packages.yml
+version: 0.17.0
+published: '2021-10-21'
+install:
+  - method: rubygems
+    command: gem install apiaryio
+authentication:
+  method: environment-variable
+  variable: APIARY_API_KEY
+  token_source: https://login.apiary.io/tokens
+  note: >-
+    The CLI sends the token as the legacy `Authentication: Token <token>` header,
+    the same scheme the /blueprint/* API operations take. Apiary's own docs warn:
+    "a token is like a password and will give anyone with this token access to
+    fetch and publish to your documentation."
+concepts:
+  - name: API_NAME
+    description: >-
+      The API Project subdomain, found under Settings -> API Domain on the
+      documentation page. Every fetch/publish command is scoped by it.
+commands:
+  - command: apiary help
+    description: List all available commands.
+  - command: apiary help <command>
+    description: Usage and flags for a single command.
+  - command: apiary fetch --api-name="<API_NAME>"
+    description: >-
+      Fetch the published API description document (API Blueprint or Swagger) and
+      print it to stdout.
+    api_operation: fetchBlueprint
+    flags:
+      - name: --api-name
+        description: The API Project subdomain to fetch.
+      - name: --output
+        description: 'Write to a file instead of stdout, e.g. --output="apiary.apib" or --output="swagger.yaml".'
+  - command: apiary preview
+    description: >-
+      Render the local `apiary.apib` or `swagger.yaml` in the working directory to
+      static documentation, validate it, and open it in the default browser. Does
+      not contact the Apiary API and needs no token.
+    api_operation: null
+  - command: apiary publish --api-name="<API_NAME>"
+    description: Publish the local API description document to the named API Project.
+    api_operation: publishBlueprint
+flows:
+  - name: Design locally, preview, publish
+    steps:
+      - Write or edit apiary.apib (or swagger.yaml) in the project root.
+      - Run `apiary preview` to validate and view the rendered documentation locally.
+      - Export APIARY_API_KEY with a token from https://login.apiary.io/tokens.
+      - Run `apiary publish --api-name="<API_NAME>"` to replace the published revision.
+  - name: Pull a published document into version control
+    steps:
+      - Export APIARY_API_KEY.
+      - Run `apiary fetch --api-name="<API_NAME>" --output="apiary.apib"`.
+      - Commit the .apib file; GitHub Sync can then keep the two in step.
+currency_note: >-
+  Latest published release 0.17.0 (2021-10-21). The apiary-client repository was
+  last pushed 2024-05-21 and the whole apiaryio GitHub organization was archived
+  on 2024-11-08.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

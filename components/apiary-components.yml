@@ -1,0 +1,72 @@
+generated: '2026-09-02'
+method: searched
+source: https://help.apiary.io/tools/embed/
+provider: Apiary
+providerId: apiary
+description: >-
+  Client-side, embeddable surfaces Apiary publishes for use inside a customer's own
+  web pages. These are distinct from SDKs: they are browser components that render
+  Apiary-hosted interactive documentation, a mock-server console and a proxy console
+  on the customer's own domain. Apiary gates Embed behind the Standard and Pro plans.
+families:
+  - name: Apiary Embed
+    kind: embeddable-documentation
+    description: >-
+      A single JavaScript file that, once loaded, exposes one global `Apiary` object
+      and renders an API Project's interactive documentation anywhere on the page,
+      with the customer's own theme, colors and fonts. Ships with the interactive
+      documentation, mock server, code examples and console.
+    docs: https://help.apiary.io/tools/embed/
+    availability: Standard and Pro plans only
+    loader:
+      type: script-tag
+      snippet: <script src="https://api.apiary.io/seeds/embed.js"></script>
+      placement: before the closing </body> tag
+      versioning: >-
+        Unpinned. The documented URL 302s to a content-hashed asset
+        (https://static.apiary.io/assets/embed-<hash>.js) and carries no version the
+        integrator can pin or assert.
+    constructor: new Apiary.Embed(options)
+    options:
+      - name: subdomain
+        required: true
+        description: The API Project subdomain to render. Changing the project subdomain requires updating the embed code.
+      - name: uuid
+        required: false
+        description: >-
+          An alternative to `subdomain` for customers integrating over the Integration
+          API; unaffected by subdomain changes.
+      - name: element
+        required: false
+        description: DOM selector (e.g. '#my-embed') to contain the embed. Defaults to the whole viewport. Multiple embeds per page are supported.
+      - name: header
+        required: false
+        description: DOM selector for a custom header rendered above a full-screen embed. Cannot be combined with `element`.
+      - name: preferences
+        required: false
+        description: Object controlling documentation behavior, including `console` and `permalinks`.
+    limitations:
+      - >-
+        Disabled on all iOS devices due to an iOS WebKit issue; a message linking to
+        the documentation on Apiary.io is shown instead.
+  - name: Browser Console with JS Agent
+    kind: in-browser-console
+    description: >-
+      An alternative to Apiary's Browser Console that still uses the browser's
+      XMLHttpRequest to reach the customer's server, but avoids the CORS limitations
+      of the standard console.
+    docs: https://help.apiary.io/tools/browser-jsagent/
+  - name: Interactive Documentation (ApiaryUI v4)
+    kind: hosted-documentation
+    description: >-
+      The hosted three-column interactive documentation rendered at
+      <subdomain>.docs.apiary.io, with an inline console for calling the mock server,
+      the debugging proxy or the production server.
+    docs: https://help.apiary.io/tools/interactive-documentation-v4/
+  - name: API Inspector
+    kind: traffic-inspector
+    description: Inspects HTTP traffic against the API description and reports where an implementation diverges from its contract.
+    docs: https://help.apiary.io/tools/api-inspector/
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

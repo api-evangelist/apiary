@@ -1,0 +1,148 @@
+generated: '2026-09-02'
+method: derived
+source: >-
+  openapi/apiary-apiary-api-openapi.yml and the MSON `dataStructures` block of
+  Apiary's own API description at https://jsapi.apiary.io/apis/apiary.
+provider: Apiary
+providerId: apiary
+description: >-
+  Entity-relationship graph for the Apiary API. Apiary names its types in MSON —
+  Error, Token, Token List, Team, User, API, API List — and the graph is small,
+  shallow and link-driven: relationships are expressed as absolute URLs on the parent
+  object rather than as nested objects or as foreign-key ids you can put in a path.
+identifier_style:
+  format: mongodb-objectid
+  detail: >-
+    `userId`, `teamId` and the revision ids in the change feed are 24-character hex
+    ObjectIds (example published by Apiary: 518bcf09a6e4580200000...). There are no
+    type prefixes (no `usr_`, `team_`), so an id is not self-describing — a caller
+    cannot tell a userId from a teamId by looking at it.
+  api_project_identifier:
+    field: apiSubdomain
+    detail: >-
+      API Projects are addressed in the API not by ObjectId but by their SUBDOMAIN, a
+      mutable human-chosen string. Every /blueprint/* path is keyed on it. Because a
+      customer can change the subdomain in project settings, the primary key an
+      integration stores can change out from under it — Apiary's own Embed docs warn
+      about exactly this and offer a `uuid` alternative for Integration API
+      customers, though no uuid is exposed on any operation in this contract.
+entities:
+  - name: User
+    description: The authenticated Apiary account. Only ever yourself — there is no operation to read another user.
+    schema: json-schema/apiary-user.schema.json
+    returned_by: [getMe]
+    fields:
+      - {name: userId, type: string, description: The user ID.}
+      - {name: userName, type: string, description: The user name.}
+      - {name: userApisUrl, type: uri, description: Link to the caller's API list resource.}
+      - {name: teams, type: array, items: Team, description: A list of Teams.}
+  - name: Team
+    description: >-
+      A team the user belongs to. Embedded inside User; there is no standalone team
+      resource, no team read, create or membership operation.
+    returned_by: [getMe]
+    fields:
+      - {name: teamId, type: string, description: The team ID.}
+      - {name: teamName, type: string, description: The team name.}
+      - {name: teamApisUrl, type: uri, description: Link to that team's API list resource.}
+  - name: API
+    description: An API Project — the unit Apiary sells. Documentation, mock server, tests and version history all hang off it.
+    schema: json-schema/apiary-api-list.schema.json
+    returned_by: [listMyApis, listTeamApis]
+    fields:
+      - {name: apiName, type: string, description: The API name.}
+      - {name: apiDocumentationUrl, type: uri, description: Link to the hosted interactive documentation.}
+      - {name: apiSubdomain, type: string, description: The subdomain for the API; the key used by every /blueprint/* path.}
+      - {name: apiIsPrivate, type: boolean}
+      - {name: apiIsPublic, type: boolean}
+      - {name: apiIsTeam, type: boolean}
+      - {name: apiIsPersonal, type: boolean}
+    note: >-
+      The four booleans encode two orthogonal binary facts (private/public,
+      team/personal) as four independent fields, so the wire format admits states the
+      product does not have — apiIsPrivate and apiIsPublic both true, or both false.
+      A consumer should read one of each pair and ignore its complement.
+  - name: Token
+    description: An authorization token. The token VALUE is returned only once, at creation.
+    schema: json-schema/apiary-token.schema.json
+    returned_by: [createAuthorizationToken]
+    fields:
+      - {name: token, type: string, description: The secret granting access to protected resources.}
+      - {name: tokenDescription, type: string, maxLength: 30, description: The token's description — also its identifier.}
+      - {name: tokenUrl, type: uri, description: A URL string representing a token resource.}
+    note: >-
+      A token's PRIMARY KEY is its description. Delete addresses it by description,
+      the "Token Description Already Exists" error enforces uniqueness on it, and the
+      tokenUrl is just the description percent-encoded onto /authorization/. That is
+      why the 30-character limit is a hard constraint and not a cosmetic one.
+      listAuthorizationTokens deliberately omits `token`, returning description and
+      URL only.
+  - name: BlueprintEnvelope
+    description: >-
+      The wrapper around an API description document on fetch — carries the document
+      source in `code` alongside an `error` boolean and a `message`.
+    returned_by: [fetchBlueprint]
+    fields:
+      - {name: error, type: boolean}
+      - {name: message, type: string}
+      - {name: code, type: string, description: The API description document source (API Blueprint or Swagger/OpenAPI).}
+  - name: ApiProjectCreated
+    description: The result of creating an API Project.
+    schema: json-schema/apiary-api-project-created.schema.json
+    returned_by: [createApiProject]
+    fields:
+      - {name: status, type: string}
+      - {name: domain, type: string, description: The subdomain actually assigned — may differ from the requested desiredName.}
+      - {name: url, type: uri, description: The hosted documentation URL for the new project.}
+  - name: Error
+    description: The closed-enum error envelope.
+    schema: json-schema/apiary-error.schema.json
+    detail: errors/apiary-problem-types.yml
+relationships:
+  - from: User
+    to: Team
+    type: has_many
+    via: teams[]
+    style: embedded
+  - from: User
+    to: API
+    type: has_many
+    via: userApisUrl
+    style: link
+    resolves_to: GET /me/apis
+  - from: Team
+    to: API
+    type: has_many
+    via: teamApisUrl
+    style: link
+    resolves_to: GET /me/teams/{teamId}/apis
+  - from: API
+    to: BlueprintEnvelope
+    type: has_one
+    via: apiSubdomain
+    style: key
+    resolves_to: GET /blueprint/get/{apiSubdomain}
+  - from: User
+    to: Token
+    type: has_many
+    via: GET /authorization
+    style: collection
+  - from: Token
+    to: Token
+    type: self
+    via: tokenUrl
+    style: link
+    note: tokenUrl is /authorization/<percent-encoded tokenDescription>.
+traversal_note: >-
+  To reach every API description document an account can see, an agent must walk:
+  GET /me (1 call) -> GET /me/apis (1 call) -> GET /me/teams/{teamId}/apis (one call
+  per team) -> GET /blueprint/get/{apiSubdomain} (one call per project). There is no
+  bulk read, no expansion parameter and no pagination, so the cost is 2 + T + P calls
+  and the middle steps return unbounded arrays.
+gaps:
+  - No delete or update operation for an API Project in the API — creation is one-way (see conventions reversibility).
+  - No team read, create or membership operation; teams appear only as a side-effect of GET /me.
+  - No resource for documentation revisions, mock servers, tests or style-guide rules, all of which are first-class in the product UI.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

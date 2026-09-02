@@ -1,0 +1,187 @@
+generated: '2026-09-02'
+method: derived
+source: >-
+  openapi/apiary-apiary-api-openapi.yml (derived from https://jsapi.apiary.io/apis/apiary),
+  plus help.apiary.io pages for the mock server, version history, CLI and API deletion.
+provider: Apiary
+providerId: apiary
+description: >-
+  Cross-cutting runtime semantics for the Apiary API — the rules an agent needs
+  before it calls, that are not visible from any single operation.
+authentication:
+  style: three-schemes-one-api
+  schemes:
+    - id: basicAuth
+      applies_to: [/authorization]
+      transport: 'Authorization: Basic <base64(email:password)>'
+      note: >-
+        Account credentials, not a token. Does not work for users in IDCS-controlled
+        (Oracle Identity Cloud Service) teams — those users must mint tokens through
+        the web UI at https://login.apiary.io/tokens instead.
+    - id: bearerAuth
+      applies_to: [/me, /me/apis, '/me/teams/{teamId}/apis']
+      transport: 'Authorization: Bearer <token>'
+      standard: RFC 6750
+    - id: legacyToken
+      applies_to: ['/blueprint/create', '/blueprint/get/{apiSubdomain}', '/blueprint/publish/{apiSubdomain}']
+      transport: 'Authentication: Token <token>'
+      note: >-
+        The header is `Authentication`, NOT `Authorization`. Apiary itself calls this
+        group legacy. The same token value works in both the Bearer and the legacy
+        header, but the header NAME differs by resource group — a client that sets one
+        Authorization header globally will get 401s on half the API.
+  detail: authentication/apiary-authentication.yml
+  token_management:
+    ui: https://login.apiary.io/tokens
+    api: POST /authorization
+    scoping: none
+    note: >-
+      Tokens are account-wide and unscoped. There are no OAuth scopes, no read-only
+      tokens and no per-project tokens. Apiary's own docs state it plainly: "a token
+      is like a password and will give anyone with this token access to fetch and
+      publish to your documentation." An agent holding a token can publish over any
+      API Project the account owns.
+transport:
+  tls_required: true
+  enforcement: >-
+    A non-TLS request is answered 403 with {"error": "Transport Layer Security
+    Required"} rather than redirected. Declared on six of the nine operations.
+idempotency:
+  supported: false
+  header: null
+  detail: >-
+    No Idempotency-Key header, no request-id echo, no dedup window, nothing in the
+    published contract. This matters most on POST /blueprint/publish/{apiSubdomain},
+    which replaces the published revision of a customer's documentation: a retried
+    publish after an ambiguous 503 will re-publish, and if another editor saved in
+    between it will silently overwrite them. POST /blueprint/create is likewise
+    non-idempotent — a retry creates a SECOND API Project, and because a taken
+    `desiredName` is silently reassigned to a generated `domain`, the duplicate
+    will not even collide loudly; the caller must read `domain` out of the 201 body
+    to learn what it actually got.
+  na: false
+pagination:
+  supported: false
+  detail: >-
+    GET /authorization, GET /me/apis and GET /me/teams/{teamId}/apis all return a
+    bare unbounded array (`tokens[]`, `apis[]`). No limit, offset, cursor, page or
+    per_page parameter is declared; no Link header, no total count, no next cursor
+    in the body. An account with many API Projects gets the whole list in one
+    response or not at all.
+field_expansion:
+  supported: false
+  detail: >-
+    No `expand`, `fields`, `include` or sparse-fieldset parameter. Related resources
+    are linked by absolute URL instead — `userApisUrl`, `teamApisUrl`,
+    `apiDocumentationUrl`, `tokenUrl` — so traversal is a second request, which is
+    HATEOAS-ish and honest but means listing a user's teams' projects is 1 + N calls.
+metadata:
+  supported: false
+  detail: No customer-defined metadata field on any resource.
+request_tracing:
+  request_id_header: null
+  correlation: none
+  detail: >-
+    No request id is returned on success or on error. There is nothing for a customer
+    to quote in a support ticket, and nothing for an agent to log for later
+    reconciliation.
+versioning:
+  scheme: none
+  in_path: false
+  in_header: false
+  detail: >-
+    No version segment in any path, no version header, no `api-version` parameter.
+    The description document carries an internal `lastUpdated` of 2020-03-02 and the
+    published change feed's newest entry is 2019-07-25 (see
+    changelog/apiary-changelog.yml). The API is unversioned and, on the evidence,
+    unchanged for years.
+error_envelope:
+  shape: two-incompatible-envelopes
+  detail: errors/apiary-problem-types.yml
+  summary: >-
+    /authorization, /me and /me/apis return {"error": "<enum string>"}. The legacy
+    /blueprint/* group returns {"error": <boolean>, "message": "<free text>"}. The
+    type of the `error` key changes between groups of the same API.
+rate_limit_signaling:
+  headers:
+    - X-Apiary-Ratelimit-Limit
+    - X-Apiary-Ratelimit-Remaining
+  applies_to: Mock Server only
+  detail: rate-limits/apiary-rate-limits.yml
+  note: >-
+    The Apiary API itself declares no rate limit, no 429 and no rate-limit headers.
+    Vendor-prefixed headers only; no RFC 9331 `RateLimit-*`.
+content_types:
+  requests:
+    - application/x-www-form-urlencoded  # /authorization
+    - application/json                   # /blueprint/*
+  responses:
+    - application/json; charset=utf-8
+  note: >-
+    Media type is not uniform: token management is form-encoded, blueprint
+    management is JSON. There is no content negotiation — no Accept-driven format
+    switching is documented.
+dry_run_mode:
+  supported: true
+  na: false
+  mechanism: local CLI preview
+  detail: >-
+    Not an API affordance, but a real one: `apiary preview` renders and VALIDATES a
+    local API description document, reporting errors, without contacting Apiary and
+    without a token. It is the rehearsal step for `publishBlueprint`. There is no
+    server-side dry-run parameter on the publish operation itself.
+  source: https://help.apiary.io/tools/apiary-cli/
+reversibility:
+  grade: documented
+  grade_basis: >-
+    Two of the three write surfaces have a documented reversal path, but Apiary
+    states a WINDOW for none of them, and the third write is documented as
+    irreversible. `documented`, not `verified`.
+  na: false
+  surfaces:
+    - write_operation: createAuthorizationToken
+      operation_id: createAuthorizationToken
+      reversal: delete
+      reversal_operation_id: deleteAuthorizationToken
+      window: null
+      window_stated: false
+      note: >-
+        A token can be revoked at any time with DELETE /authorization, or replaced in
+        place by re-posting with `tokenRegenerate=true`. No expiry and no window is
+        documented — tokens appear to live until revoked, which is itself the risk.
+      source: https://jsapi.apiary.io/apis/apiary
+    - write_operation: publishBlueprint
+      operation_id: publishBlueprint
+      reversal: restore-previous-version
+      reversal_operation_id: null
+      window: null
+      window_stated: false
+      note: >-
+        MANUAL ONLY, AND NOT VIA THE API. Apiary keeps a version history and exposes
+        it as an Atom/RSS feed per project (https://<project>.docs.apiary.io/feed)
+        with a diffing UI per entry, but the documented rollback procedure is human:
+        "If you want to rollback, find the version you are looking for, copy it to
+        the editor and save the project." There is no restore/rollback operation in
+        the API, no revision identifier accepted by publishBlueprint, and no stated
+        retention window for how far back history goes. An agent that publishes a bad
+        revision cannot undo it programmatically — it can only re-publish a copy it
+        kept itself, which means an agent MUST call fetchBlueprint and retain the
+        result before it calls publishBlueprint.
+      source: https://help.apiary.io/tools/version-history/
+    - write_operation: createApiProject
+      operation_id: createApiProject
+      reversal: delete-api-project
+      reversal_operation_id: null
+      window: null
+      window_stated: false
+      note: >-
+        Deletion exists but only in the web UI (Settings -> Remove API Project,
+        gated behind typing the API domain to confirm), not in the API. Apiary states
+        of that deletion: "This operation can't be undone." Removing a project with
+        GitHub Integration also removes its child feature-branches. So creation is
+        reversible only by a human, and that reversal is itself irreversible.
+      source: https://help.apiary.io/faq/delete_api/
+  read_only: false
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

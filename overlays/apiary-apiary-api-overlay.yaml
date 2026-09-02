@@ -1,0 +1,92 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Apiary API
+  version: 1.0.0
+extends: ../openapi/apiary-apiary-api-openapi.yml
+x-provenance:
+  generated: '2026-09-02'
+  method: generated
+  source: >-
+    API Evangelist enrichment pass. Captures the annotations API Evangelist adds on
+    top of Apiary's published description — provenance, the legacy/deprecation
+    signals Apiary states only in prose, and the reversibility warnings on the
+    destructive operations. The base OpenAPI is never mutated.
+actions:
+  - target: $.info
+    description: Stamp API Evangelist provenance onto the document.
+    update:
+      x-apievangelist:
+        provider: apiary
+        catalog: https://apis.io/provider/apiary
+        contract_origin: >-
+          Translated from Apiary's own API Blueprint / API Elements description at
+          https://jsapi.apiary.io/apis/apiary. Apiary publishes no OpenAPI of its own.
+        artifacts:
+          errors: ../errors/apiary-problem-types.yml
+          conventions: ../conventions/apiary-conventions.yml
+          data_model: ../data-model/apiary-data-model.yml
+          lifecycle: ../lifecycle/apiary-lifecycle.yml
+          rate_limits: ../rate-limits/apiary-rate-limits.yml
+          sandbox: ../sandbox/apiary-sandbox.yml
+  - target: $.tags[?(@.name=='Blueprint')]
+    description: >-
+      Apiary calls this group "legacy" in prose but stamps nothing machine-readable.
+      Surface it as a structured signal without editing Apiary's own document.
+    update:
+      x-lifecycle-status: legacy
+      x-lifecycle-source: https://jsapi.apiary.io/apis/apiary
+      x-lifecycle-note: >-
+        Apiary's own group description reads "Apiary API exposes legacy API Blueprint
+        utilities" and calls Authentication:Token "our legacy, authorization token
+        HTTP header". No replacement is named and no sunset date is published. These
+        are the only operations that read or write API description documents.
+  - target: $.paths['/blueprint/publish/{apiSubdomain}'].post
+    description: Record that this operation is destructive and has no server-side undo.
+    update:
+      x-destructive: true
+      x-idempotent: false
+      x-reversibility:
+        grade: documented
+        reversal: restore-previous-version
+        reversal_operation_id: null
+        window: null
+        note: >-
+          Replaces the published revision. Apiary keeps version history and exposes a
+          per-project Atom feed with a diffing UI, but rollback is a manual
+          copy-and-save in the web editor — there is no restore operation and no
+          stated retention window. A caller MUST fetch and retain the current
+          document before publishing.
+        source: https://help.apiary.io/tools/version-history/
+  - target: $.paths['/blueprint/create'].post
+    description: Record the silent-rename behaviour and the absence of a delete operation.
+    update:
+      x-idempotent: false
+      x-reversibility:
+        grade: documented
+        reversal: delete-api-project
+        reversal_operation_id: null
+        window: null
+        note: >-
+          A taken `desiredName` is silently replaced by a generated `domain` — read it
+          from the 201 body. Deletion exists only in the web UI and Apiary states it
+          "can't be undone"; deleting a project with GitHub Integration also removes
+          its child feature branches.
+        source: https://help.apiary.io/faq/delete_api/
+  - target: $.paths['/authorization'].post
+    description: Note that the token description is the token's identifier.
+    update:
+      x-key-field: tokenDescription
+      x-note: >-
+        The 30-character description is the token's primary key: DELETE addresses a
+        token by it, uniqueness is enforced on it via the "Token Description Already
+        Exists" error, and tokenUrl is that description percent-encoded. The secret
+        value is returned only on this response and never again.
+  - target: $.components.schemas.Error
+    description: Flag that the enum member is the display string, so rewording is breaking.
+    update:
+      x-stability-warning: >-
+        These enum members are human-readable sentences used as machine identifiers.
+        Any rewording by Apiary is a silent breaking change for a client matching on
+        them. Five members (Token Creation Failed, Token Deletion Failed, Token
+        Retrieval Failed, User Query Failed, API Query Failed) are never bound to an
+        HTTP status in the published contract.

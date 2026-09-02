@@ -55,7 +55,7 @@ tags_raw:
 url: >-
   https://raw.githubusercontent.com/api-evangelist/apiary/refs/heads/main/apis.yml
 created: '2026-03-25'
-modified: '2026-04-19'
+modified: '2026-09-02'
 specificationVersion: '0.23'
 apis:
   - aid: apiary:apiary-api
@@ -66,6 +66,7 @@ apis:
       API Blueprint and Swagger/OpenAPI documents, managing team members,
       and integrating Apiary workflows into CI/CD pipelines.
     humanURL: https://apiary.io
+    baseURL: https://api.apiary.io
     tags:
       - API Blueprint
       - API Design
@@ -77,6 +78,24 @@ apis:
         url: https://help.apiary.io
       - type: GettingStarted
         url: https://help.apiary.io/tools/apiary-cli/
+      - type: APIReference
+        url: https://apiary.docs.apiary.io
+      - type: OpenAPI
+        url: openapi/apiary-apiary-api-openapi.yml
+      - type: Overlay
+        url: overlays/apiary-apiary-api-overlay.yaml
+      - type: JSONSchema
+        url: json-schema/apiary-user.schema.json
+      - type: JSONSchema
+        url: json-schema/apiary-api-list.schema.json
+      - type: JSONSchema
+        url: json-schema/apiary-token.schema.json
+      - type: JSONSchema
+        url: json-schema/apiary-token-list.schema.json
+      - type: JSONSchema
+        url: json-schema/apiary-error.schema.json
+      - type: JSONSchema
+        url: json-schema/apiary-api-project-created.schema.json
   - aid: apiary:api-blueprint
     name: API Blueprint
     description: >-
@@ -106,6 +125,38 @@ apis:
       - type: Specification
         url: https://apiblueprint.org/documentation/specification.html
 common:
+  - type: Authentication
+    url: authentication/apiary-authentication.yml
+  - type: Packages
+    url: packages/apiary-packages.yml
+  - type: SDKs
+    url: packages/apiary-packages.yml
+  - type: CLI
+    url: cli/apiary-cli.yml
+  - type: Components
+    url: components/apiary-components.yml
+  - type: Conventions
+    url: conventions/apiary-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apiary-problem-types.yml
+  - type: DataModel
+    url: data-model/apiary-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/apiary-lifecycle.yml
+  - type: ChangeLog
+    url: changelog/apiary-changelog.yml
+  - type: Conformance
+    url: conformance/apiary-conformance.yml
+  - type: Sandbox
+    url: sandbox/apiary-sandbox.yml
+  - type: Plans
+    url: plans/apiary-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/apiary-rate-limits.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: LLMsTxt
+    url: llms/apiary-llms.txt
   - type: IssueTracker
     url: https://github.com/apiaryio/api-blueprint/issues
   - type: Releases
@@ -134,9 +185,13 @@ common:
   - type: Support
     url: https://help.apiary.io
   - type: PrivacyPolicy
-    url: https://www.oracle.com/legal/privacy/
+    url: https://apiary.io/privacy
   - type: TermsOfService
-    url: https://www.oracle.com/legal/terms.html
+    url: https://apiary.io/tos
+  - type: ChangeLogRSS
+    url: https://apiary.docs.apiary.io/feed
+  - type: BlogRSS
+    url: https://blog.apiary.io/feed.xml
   - type: Features
     data:
       - name: API Blueprint Support
@@ -170,3 +225,8 @@ common:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-09-02'
+  status: enriched
+  artifacts_added: 27
+  pass: local-v1

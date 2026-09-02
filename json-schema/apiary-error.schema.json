@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "error": {
+      "enum": [
+        "Unauthorized",
+        "Transport Layer Security Required",
+        "Token Invalid",
+        "Token Description Length Greater Than 30",
+        "Token Description Missing",
+        "Token Description Already Exists",
+        "Token Creation Failed",
+        "Token Deletion Failed",
+        "Token Retrieval Failed",
+        "User Query Failed",
+        "API Query Failed",
+        "Team ID Invalid"
+      ]
+    }
+  }
+}

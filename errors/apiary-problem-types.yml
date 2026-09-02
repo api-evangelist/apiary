@@ -1,0 +1,163 @@
+generated: '2026-09-02'
+method: derived
+source: >-
+  openapi/apiary-apiary-api-openapi.yml, derived in turn from Apiary's own published
+  API description at https://jsapi.apiary.io/apis/apiary (the `Error` MSON data
+  structure and every 4xx/5xx response example it declares).
+provider: Apiary
+providerId: apiary
+description: >-
+  Error catalog for the Apiary API. Apiary publishes a CLOSED ENUM of error strings —
+  a genuinely useful thing that most providers do not do — but it is carried in a
+  bespoke envelope, not RFC 9457 Problem Details, and the same API uses TWO
+  INCOMPATIBLE ENVELOPES depending on which resource group you are calling.
+format: bespoke
+rfc9457: false
+rfc9457_note: >-
+  No operation declares application/problem+json. Every error response is
+  application/json carrying a vendor-shaped body. An agent cannot rely on `type`,
+  `title`, `detail`, `status` or `instance`.
+envelopes:
+  - id: enum-envelope
+    applies_to:
+      - /authorization
+      - /me
+      - /me/apis
+      - /me/teams/{teamId}/apis
+    media_type: application/json
+    shape:
+      error: string (one of a closed 12-member enum)
+    example: '{"error": "Token Invalid"}'
+    note: >-
+      `error` is a human-readable sentence, not a stable machine code. It is the only
+      field. There is no numeric code, no request id, no remediation link and no
+      field pointer for validation failures.
+  - id: legacy-boolean-envelope
+    applies_to:
+      - /blueprint/create
+      - /blueprint/get/{apiSubdomain}
+      - /blueprint/publish/{apiSubdomain}
+    media_type: application/json
+    shape:
+      error: boolean
+      message: string (free text)
+    example: '{"error": true, "message": "Internal Error."}'
+    note: >-
+      THE TYPE OF `error` FLIPS. On the legacy /blueprint/* group `error` is a
+      boolean and the text lives in `message`; everywhere else `error` IS the text.
+      A client that branches on `body.error` being truthy will treat the string
+      "Unauthorized" and the boolean true identically, but a client that reads
+      `body.error` as the message will read `true` on the blueprint group. This is
+      the single most likely integration bug in this API.
+      Also note: on success, /blueprint/get returns `"error": false` with HTTP 200 —
+      the envelope is present on the happy path too.
+problem_types:
+  - name: Unauthorized
+    http_status: 401
+    envelope: enum-envelope
+    operations: [createAuthorizationToken, listAuthorizationTokens, deleteAuthorizationToken]
+    meaning: Basic authentication credentials were missing or rejected on /authorization.
+    remediation: >-
+      Send HTTP Basic credentials (account email and password). Note that this
+      resource does not work for users who are part of IDCS-controlled teams.
+  - name: Transport Layer Security Required
+    http_status: 403
+    envelope: enum-envelope
+    operations: [createAuthorizationToken, listAuthorizationTokens, deleteAuthorizationToken, getMe, listMyApis, listTeamApis]
+    meaning: The request was not made over TLS.
+    remediation: Re-issue the request over https. Every Apiary API operation declares this response.
+  - name: Token Invalid
+    http_status: 401
+    envelope: enum-envelope
+    response_header: 'WWW-Authenticate: Bearer error="invalid_token"'
+    operations: [getMe, listMyApis, listTeamApis]
+    meaning: The Bearer token was absent, malformed or revoked.
+    remediation: >-
+      Mint a new token at https://login.apiary.io/tokens or via POST /authorization,
+      and send it as `Authorization: Bearer <token>`. This is the one error Apiary
+      signals in an RFC 6750 conformant way, via WWW-Authenticate.
+  - name: Token Description Missing
+    http_status: 400
+    envelope: enum-envelope
+    operations: [createAuthorizationToken, deleteAuthorizationToken]
+    meaning: The form-encoded body omitted `tokenDescription`.
+    remediation: Send `tokenDescription` in the application/x-www-form-urlencoded body.
+  - name: Token Description Length Greater Than 30
+    http_status: 400
+    envelope: enum-envelope
+    operations: [createAuthorizationToken, deleteAuthorizationToken]
+    meaning: The token description exceeded 30 characters.
+    remediation: Shorten the description to 30 characters or fewer.
+  - name: Token Description Already Exists
+    http_status: 400
+    envelope: enum-envelope
+    operations: [createAuthorizationToken]
+    meaning: A token with this description already exists for the account.
+    remediation: >-
+      Choose a different description, or resend with `tokenRegenerate=true` to
+      replace the existing token's value. Regeneration invalidates the old value.
+  - name: Team ID Invalid
+    http_status: 404
+    envelope: enum-envelope
+    operations: [listTeamApis]
+    meaning: The `teamId` path parameter did not resolve to a team the caller may access.
+    remediation: Read the caller's team list from GET /me and use a `teamId` from it.
+  - name: Token Creation Failed
+    http_status: null
+    envelope: enum-envelope
+    operations: [createAuthorizationToken]
+    meaning: Server-side failure while minting a token.
+    note: >-
+      Declared in the published `Error` enum but never bound to a status code in any
+      example, so the HTTP status an agent should expect is not stated. Recorded as
+      null rather than guessed.
+  - name: Token Deletion Failed
+    http_status: null
+    envelope: enum-envelope
+    operations: [deleteAuthorizationToken]
+    meaning: Server-side failure while deleting a token.
+    note: Declared in the enum; no status code bound in any published example.
+  - name: Token Retrieval Failed
+    http_status: null
+    envelope: enum-envelope
+    operations: [listAuthorizationTokens]
+    meaning: Server-side failure while listing tokens.
+    note: Declared in the enum; no status code bound in any published example.
+  - name: User Query Failed
+    http_status: null
+    envelope: enum-envelope
+    operations: [getMe]
+    meaning: Server-side failure while reading the user record.
+    note: Declared in the enum; no status code bound in any published example.
+  - name: API Query Failed
+    http_status: null
+    envelope: enum-envelope
+    operations: [listMyApis, listTeamApis]
+    meaning: Server-side failure while reading the caller's API Project list.
+    note: Declared in the enum; no status code bound in any published example.
+  - name: Internal Error.
+    http_status: 500
+    envelope: legacy-boolean-envelope
+    operations: [fetchBlueprint, publishBlueprint]
+    meaning: Unspecified server-side failure on the legacy Blueprint group.
+    remediation: Retry; if it persists, contact support@apiary.io.
+  - name: Infrastructure problem; please retry in a while.
+    http_status: 503
+    envelope: legacy-boolean-envelope
+    operations: [fetchBlueprint, publishBlueprint]
+    meaning: Transient infrastructure unavailability.
+    remediation: >-
+      Retry after a delay. No Retry-After header is documented, so the client must
+      choose its own backoff. Publishing is not idempotent (see
+      conventions/apiary-conventions.yml), so a blind retry of publishBlueprint can
+      overwrite a concurrent edit.
+gaps:
+  - No RFC 9457 problem+json anywhere.
+  - No machine-stable error code — the enum member IS the display string, so any rewording is a breaking change for clients matching on it.
+  - No request/correlation id on any error response, so a support ticket cannot reference a specific failed call.
+  - Five of the twelve enum members are never bound to an HTTP status in the published contract.
+  - No 429 declared anywhere, despite a documented rate limit on the mock server.
+  - /blueprint/create declares only a 201; no failure response of any kind is published for it.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

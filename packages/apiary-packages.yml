@@ -1,0 +1,176 @@
+generated: '2026-09-02'
+method: searched
+source: >-
+  Registry metadata read live on 2026-09-02 from registry.npmjs.org,
+  rubygems.org/api/v1 and pypi.org/pypi; package identity and first-party status
+  confirmed against the apiaryio GitHub organization and help.apiary.io.
+provider: Apiary
+providerId: apiary
+description: >-
+  First-party client libraries, parsers and testing tooling published by Apiary
+  (github.com/apiaryio). Apiary ships no SDK for the Apiary API itself in any
+  language other than Ruby — the `apiaryio` gem is the Apiary CLI and is the only
+  package that calls api.apiary.io. Everything else Apiary publishes is tooling
+  for the API description formats (API Blueprint parsers) and for contract testing
+  (Dredd, Gavel), not a client for the Apiary API.
+note: >-
+  CURRENCY IS THE HEADLINE FINDING. Every first-party package below has a latest
+  release dated 2021 or earlier, and the entire apiaryio GitHub organization was
+  archived on 2024-11-08 (observed on github.com/apiaryio, 2026-09-02) — including
+  api-blueprint, dredd, drafter, protagonist and api-elements.js, all of which
+  carry GitHub's archived banner. The Apiary API description document these
+  packages target was itself last updated 2020-03-02. The hosted service remains
+  live and answers requests; the client-side estate around it does not appear to
+  be maintained.
+official_count: 6
+packages:
+  - name: apiaryio
+    registry: rubygems
+    language: ruby
+    official: true
+    role: cli
+    version: 0.17.0
+    published: '2021-10-21'
+    url: https://rubygems.org/gems/apiaryio
+    repository: https://github.com/apiaryio/apiary-client
+    docs: https://help.apiary.io/tools/apiary-cli/
+    license: MIT
+    description: >-
+      Apiary.io CLI. The only first-party package that talks to the Apiary API —
+      fetches and publishes API description documents and previews them locally.
+      Reads the token from the APIARY_API_KEY environment variable.
+    covers_operations:
+      - fetchBlueprint
+      - publishBlueprint
+  - name: dredd
+    registry: npm
+    language: javascript
+    official: true
+    role: testing
+    version: 14.1.0
+    published: '2021-11-16'
+    url: https://www.npmjs.com/package/dredd
+    repository: https://github.com/apiaryio/dredd
+    license: MIT
+    description: >-
+      Language-agnostic HTTP API testing framework. Validates a running API against
+      its API Blueprint or OpenAPI description. Apiary calls Dredd "the backbone of
+      our testing service"; results can be reported into the Apiary test inspector.
+    archived_upstream: true
+  - name: dredd-transactions
+    registry: npm
+    language: javascript
+    official: true
+    role: library
+    version: 10.1.0
+    published: '2021-11-16'
+    url: https://www.npmjs.com/package/dredd-transactions
+    repository: https://github.com/apiaryio/dredd
+    license: MIT
+    description: Compiles HTTP transactions (request/response pairs) from an API description document.
+    archived_upstream: true
+  - name: gavel
+    registry: npm
+    language: javascript
+    official: true
+    role: library
+    version: 10.0.4
+    published: '2021-12-09'
+    url: https://www.npmjs.com/package/gavel
+    repository: https://github.com/apiaryio/gavel.js
+    license: MIT
+    description: Validator of HTTP transactions — the expectation engine underneath Dredd.
+    archived_upstream: true
+  - name: protagonist
+    registry: npm
+    language: javascript
+    official: true
+    role: parser
+    version: 2.3.0
+    published: '2023-07-28'
+    url: https://www.npmjs.com/package/protagonist
+    repository: https://github.com/apiaryio/protagonist
+    license: MIT
+    description: Node.js binding for the C++ API Blueprint parser (drafter). The most recently published first-party package.
+    archived_upstream: true
+  - name: api-elements
+    registry: npm
+    language: javascript
+    official: true
+    role: library
+    version: 0.3.2
+    published: '2020-09-23'
+    url: https://www.npmjs.com/package/api-elements
+    repository: https://github.com/apiaryio/api-elements.js
+    license: MIT
+    description: >-
+      JavaScript library for consuming API Elements — the refract-based parse-result
+      format that the Apiary API description document itself is served in.
+    archived_upstream: true
+  - name: drafter
+    registry: npm
+    language: javascript
+    official: true
+    role: parser
+    version: 2.0.0
+    published: '2020-03-17'
+    url: https://www.npmjs.com/package/drafter
+    repository: https://github.com/apiaryio/drafter-npm
+    license: MIT
+    description: API Blueprint parser distributed for Node.js.
+    archived_upstream: true
+  - name: dredd_hooks
+    registry: pypi
+    language: python
+    official: true
+    role: testing-hooks
+    version: 0.2.0
+    published: '2018-04-09'
+    url: https://pypi.org/project/dredd_hooks/
+    repository: https://github.com/apiaryio/dredd-hooks-python
+    license: MIT
+    description: Python hooks bridge for the Dredd API testing framework.
+    archived_upstream: true
+  - name: dredd_hooks
+    registry: rubygems
+    language: ruby
+    official: true
+    role: testing-hooks
+    version: 0.1.2
+    published: '2016-12-30'
+    url: https://rubygems.org/gems/dredd_hooks
+    repository: https://github.com/apiaryio/dredd-hooks-ruby
+    license: MIT
+    description: Ruby hooks bridge for the Dredd API testing framework.
+    archived_upstream: true
+  - name: apiary-embed
+    registry: cdn
+    language: javascript
+    official: true
+    role: embeddable-component
+    version: null
+    published: null
+    url: https://api.apiary.io/seeds/embed.js
+    docs: https://help.apiary.io/tools/embed/
+    description: >-
+      Apiary Embed — the browser build that renders Apiary interactive documentation
+      on a customer's own domain, loaded with a plain script tag.
+    note: >-
+      UNPINNED DISTRIBUTION, checked 2026-09-02. https://api.apiary.io/seeds/embed.js
+      answers HTTP 302 to https://static.apiary.io/assets/embed-e9daaa54.js — a build
+      hash, not a semantic version, and the documented script tag carries no version
+      at all. There is no registry metadata endpoint and no way for a consumer to
+      state or verify which build they are loading; the URL silently floats. Recorded
+      as null rather than guessed.
+not_published:
+  - note: >-
+      No first-party SDK for the Apiary API exists on npm, PyPI, Maven Central,
+      NuGet, pkg.go.dev, Packagist or crates.io. Apiary publishes a CLI (Ruby) and
+      description-format tooling only.
+  - note: >-
+      The `gavel` gem on RubyGems (0.0.0, 2013-07-04, "Gavel name placeholder") is a
+      squatted/placeholder name and is NOT the Apiary Gavel release; excluded
+      deliberately.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

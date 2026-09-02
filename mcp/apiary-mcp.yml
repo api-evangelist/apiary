@@ -1,0 +1,169 @@
+generated: '2026-09-02'
+method: derived
+source: openapi/apiary-apiary-api-openapi.yml
+provider: Apiary
+providerId: apiary
+status: candidate
+description: >-
+  Apiary publishes NO Model Context Protocol server — not remote, not stdio. The
+  tools below are a CANDIDATE surface derived by API Evangelist from the nine
+  operations Apiary actually publishes, so an agent author can see what an Apiary MCP
+  server would expose. Nothing here is callable today.
+search_record:
+  searched: '2026-09-02'
+  probes:
+    - {url: 'https://api.apiary.io/mcp', status: 404}
+    - {url: 'https://api.apiary.io/.well-known/oauth-authorization-server', status: 404}
+    - {url: 'https://api.apiary.io/.well-known/oauth-protected-resource', status: 404}
+    - {url: 'https://apiary.io/.well-known/ai-plugin.json', status: 404}
+    - {url: 'https://apiary.io/llms.txt', status: 404}
+  registries_checked:
+    - npm (no @apiary*/mcp or apiary-mcp package)
+    - github.com/apiaryio (organization archived 2024-11-08; no MCP repository)
+  finding: >-
+    No MCP server exists, and none is likely to appear: the open-source organization
+    was archived in 2024 and the API description has not changed since 2019.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: derived
+  note: >-
+    mode: none because nobody ships a server. If Apiary ever shipped one, auth would
+    almost certainly be the existing personal token — there is no OAuth
+    authorization server to negotiate against.
+authentication_if_built:
+  scheme: api-key
+  detail: >-
+    An Apiary MCP server would carry a personal token as `Authorization: Bearer` for
+    the user/API-list tools and as the legacy `Authentication: Token` header for the
+    blueprint tools. Tokens are unscoped and account-wide, so a server exposing
+    publish_blueprint would grant an agent write access to every API Project on the
+    account — see conventions/apiary-conventions.yml.
+tools:
+  - name: get_me
+    description: Get the authenticated Apiary user, including the teams they belong to.
+    rest: [getMe]
+    method: GET
+    path: /me
+    inputSchema:
+      type: object
+      properties: {}
+    read_only: true
+  - name: list_my_apis
+    description: List the API Projects the authenticated user can access — personal and team, public and private.
+    rest: [listMyApis]
+    method: GET
+    path: /me/apis
+    inputSchema:
+      type: object
+      properties: {}
+    read_only: true
+  - name: list_team_apis
+    description: List the API Projects belonging to one team.
+    rest: [listTeamApis]
+    method: GET
+    path: /me/teams/{teamId}/apis
+    inputSchema:
+      type: object
+      required: [teamId]
+      properties:
+        teamId:
+          type: string
+          description: A team ID, read from the `teams[].teamId` field of get_me.
+    read_only: true
+  - name: fetch_blueprint
+    description: Fetch the published API description document (API Blueprint or Swagger) for one API Project.
+    rest: [fetchBlueprint]
+    method: GET
+    path: /blueprint/get/{apiSubdomain}
+    inputSchema:
+      type: object
+      required: [apiSubdomain]
+      properties:
+        apiSubdomain:
+          type: string
+          description: The API Project subdomain, read from `apis[].apiSubdomain` of list_my_apis.
+    read_only: true
+  - name: publish_blueprint
+    description: >-
+      Replace the published API description document for one API Project. DESTRUCTIVE
+      — overwrites the current revision with no server-side undo.
+    rest: [publishBlueprint]
+    method: POST
+    path: /blueprint/publish/{apiSubdomain}
+    inputSchema:
+      type: object
+      required: [apiSubdomain, code]
+      properties:
+        apiSubdomain: {type: string}
+        code: {type: string, description: The API description document source to publish.}
+    read_only: false
+    destructive: true
+    reversibility: >-
+      No API-level rollback. An agent must call fetch_blueprint and keep the result
+      before calling this, or the previous revision is only recoverable by a human
+      copying it out of the web diffing UI.
+  - name: create_api_project
+    description: Create a new API Project from an API description document.
+    rest: [createApiProject]
+    method: POST
+    path: /blueprint/create
+    inputSchema:
+      type: object
+      required: [code]
+      properties:
+        type: {type: string, enum: [personal, team]}
+        public: {type: boolean}
+        desiredName: {type: string, description: Desired subdomain; may be reassigned if taken.}
+        code: {type: string}
+    read_only: false
+    note: >-
+      Not idempotent. A retry creates a second project, and a taken `desiredName` is
+      silently replaced by a generated `domain` — read `domain` from the response.
+      There is no delete operation in the API, so an agent cannot clean up after
+      itself.
+  - name: list_authorization_tokens
+    description: List the account's authorization tokens by description (values are not returned).
+    rest: [listAuthorizationTokens]
+    method: GET
+    path: /authorization
+    inputSchema:
+      type: object
+      properties: {}
+    read_only: true
+    note: Requires HTTP Basic account credentials, not a token — unsuitable for an agent.
+  - name: create_authorization_token
+    description: Mint a new authorization token.
+    rest: [createAuthorizationToken]
+    method: POST
+    path: /authorization
+    inputSchema:
+      type: object
+      required: [tokenDescription]
+      properties:
+        tokenDescription: {type: string, maxLength: 30}
+        tokenRegenerate: {type: boolean, default: false}
+    read_only: false
+    note: Requires HTTP Basic account credentials. Should not be exposed to an agent.
+  - name: delete_authorization_token
+    description: Revoke an authorization token by its description.
+    rest: [deleteAuthorizationToken]
+    method: DELETE
+    path: /authorization
+    inputSchema:
+      type: object
+      required: [tokenDescription]
+      properties:
+        tokenDescription: {type: string, maxLength: 30}
+    read_only: false
+    note: Requires HTTP Basic account credentials. Should not be exposed to an agent.
+coverage:
+  rest_operations: 9
+  tools_derived: 9
+  unmapped_operations: 0
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

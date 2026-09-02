@@ -4,147 +4,138 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Apiary
 providerId: apiary
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
-tags:
-  - API Blueprint
-  - API Design
-  - API Testing
-  - Collaboration
-  - Design First
-  - Documentation
-  - Mock Servers
-  - Oracle
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
+modified: '2026-09-02'
+generated: '2026-09-02'
+method: searched
+source: https://apiary.io/plans
+description: >-
+  Apiary's published plans, read from apiary.io/plans on 2026-09-02. Apiary names
+  three tiers and publishes their feature and collaborator limits in full, but
+  publishes NO PRICE for any of them — there is no figure, no currency and no
+  billing period anywhere on the plans page. Pricing is obtained by contacting
+  Apiary/Oracle.
+note: >-
+  THIS FILE REPLACES A SCAFFOLD. The previous revision (method: generated,
+  2026-05-04) invented a free/professional/enterprise ladder with 1,000 and 100,000
+  request monthly quotas and per-minute rate entries. Apiary does not meter its plans
+  by API request at all — it meters them by collaborators per API Project, team
+  membership and feature access. Those invented quotas have been removed rather than
+  corrected, because there was nothing to correct them to.
+plan_count: 3
+currency: null
+billing_period: null
+pricing_published: false
+pricing_note: >-
+  apiary.io/plans (HTTP 200, fetched 2026-09-02) lists tier names, collaborator
+  limits and feature matrices but no monetary amount for any tier. Recorded as
+  unpublished, not as free.
 plans:
   - id: apiary-free
     name: Free
     type: freemium
-    description: Free entry tier for the Apiary API surface. Intended for evaluation, prototyping, and
-      low-volume integrations. Real limits and pricing must be reconciled with the provider's published
-      plan documentation.
+    status: deprecated
+    status_source: https://apiary.io/plans
+    status_note: >-
+      Apiary labels this tier "Deprecated" on its own plans page. It is still
+      described, but it is not presented as a tier a new customer should choose.
+    price: null
     entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
+      - label: Collaborators
+        name: collaborators
+        type: seat
+        metric: collaborators_per_api_project
+        limit: 5
+        scope: per API Project
+      - label: Team
+        name: team
+        type: feature
+        metric: team
+        limit: 0
+        note: No team.
+      - label: API Projects
+        name: api_projects
         type: quota
-        metric: requests
-        limit: 1000
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
+        metric: api_projects
+        limit: -1
+        note: Unlimited.
     elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
-      - name: Apiary API
-      - name: API Blueprint
-  - id: apiary-pro
-    name: Professional
+      - name: API Description Editor
+      - name: Mock Server
+      - name: Interactive Documentation
+      - name: Testing Debugger
+      - name: Automated Implementation Testing
+      - name: RSS feeds
+      - name: Unlimited API Projects
+      - name: Basic GitHub Sync
+      - name: API Blueprint format
+      - name: OpenAPI (Swagger) format
+  - id: apiary-standard
+    name: Standard
     type: paid
-    description: Production tier for Apiary. Provides higher quotas, priority support, and access to the
-      broader API portfolio. Pricing placeholder; align with the provider's pricing page.
+    status: available
+    price: null
     entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 100000
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1
-        price: TBD
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
-        type: metered
-        metric: requests
+      - label: Collaborators
+        name: collaborators
+        type: seat
+        metric: collaborators_per_api_project
+        limit: 10
+        scope: per API Project
+      - label: Team members
+        name: team_members
+        type: seat
+        metric: team_members
         limit: -1
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1000
-        price: TBD
-        userMultiplied: false
+        note: Unlimited team members.
+      - label: Viewers
+        name: viewers
+        type: seat
+        metric: read_only_viewers
+        limit: 50
+        note: >-
+          Viewers do not count as users; capped at 50 on Standard. This limit can be
+          raised in custom Pro plans.
     elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: Apiary API
-      - name: API Blueprint
-  - id: apiary-enterprise
-    name: Enterprise
+      - name: Everything in Free
+      - name: Team Management
+      - name: Private API Projects
+      - name: Embeddable Documentation
+      - name: Customizable Documentation
+  - id: apiary-pro
+    name: Pro
     type: enterprise
-    description: Custom-negotiated tier for Apiary. Includes dedicated capacity, contractual SLAs, security
-      review, data residency options, and named technical account management.
+    status: available
+    price: null
     entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: configurable
-        domains: []
-        unit: 1
-        price: custom
-        userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains: []
-        unit: 1
-        price: custom
-        userMultiplied: false
+      - label: Collaborators
+        name: collaborators
+        type: seat
+        metric: collaborators_per_api_project
+        limit: null
+        note: Custom.
+      - label: Viewers
+        name: viewers
+        type: seat
+        metric: read_only_viewers
+        limit: null
+        note: The Standard 50-viewer cap can be raised in custom Pro plans.
     elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: Apiary API
-      - name: API Blueprint
+      - name: Everything in Standard
+      - name: Advanced GitHub Integration (multiple branches)
+      - name: Multiple API descriptions per repository
+      - name: GitHub Enterprise support
+      - name: Style Guide Rules
+      - name: Read-only API Projects and Branches
+      - name: Multiple Blueprints
+      - name: Priority Support with guaranteed 24x7 response times
+metering_model:
+  basis: seats-and-features
+  note: >-
+    Apiary does not meter or price by API call. The commercial axes are collaborators
+    per API Project, team membership, read-only viewers, and access to features
+    (private projects, embed, style guide, GitHub Enterprise). The one documented
+    request-rate ceiling in the product — the Mock Server's 120/5000 per minute —
+    is not attached to a plan; see rate-limits/apiary-rate-limits.yml.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
