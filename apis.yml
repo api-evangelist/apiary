@@ -40,7 +40,6 @@ tags:
   - API Testing
   - Collaboration
   - Design-First
-  - Developer Tools
   - Documentation
   - Mock Servers
   - Oracle
@@ -59,73 +58,156 @@ created: '2026-03-25'
 modified: '2026-09-02'
 specificationVersion: '0.23'
 apis:
-  - aid: apiary:apiary-api
-    name: Apiary API
-    description: >-
-      The Apiary API provides programmatic access to manage API projects,
-      documentation, and team collaboration. It allows creating and updating
-      API Blueprint and Swagger/OpenAPI documents, managing team members,
-      and integrating Apiary workflows into CI/CD pipelines.
-    humanURL: https://apiary.io
-    baseURL: https://api.apiary.io
-    tags:
-      - API Blueprint
-      - API Design
-      - Collaboration
-      - Documentation
-      - Mock Servers
-    properties:
-      - type: Documentation
-        url: https://help.apiary.io
-      - type: GettingStarted
-        url: https://help.apiary.io/tools/apiary-cli/
-      - type: APIReference
-        url: https://apiary.docs.apiary.io
-      - type: OpenAPI
-        url: openapi/apiary-apiary-api-openapi.yml
-      - type: Overlay
-        url: overlays/apiary-apiary-api-overlay.yaml
-      - type: JSONSchema
-        url: json-schema/apiary-user.schema.json
-      - type: JSONSchema
-        url: json-schema/apiary-api-list.schema.json
-      - type: JSONSchema
-        url: json-schema/apiary-token.schema.json
-      - type: JSONSchema
-        url: json-schema/apiary-token-list.schema.json
-      - type: JSONSchema
-        url: json-schema/apiary-error.schema.json
-      - type: JSONSchema
-        url: json-schema/apiary-api-project-created.schema.json
-  - aid: apiary:api-blueprint
-    name: API Blueprint
-    description: >-
-      API Blueprint is a high-level API design language created by Apiary for
-      designing and documenting web APIs. It uses a Markdown-based syntax
-      that is human-readable and machine-parseable, enabling teams to design
-      APIs collaboratively and generate documentation, mock servers, and
-      tests from a single source of truth.
-    humanURL: https://apiblueprint.org
-    tags:
-      - API Blueprint
-      - API Design
-      - Documentation
-      - Open-Source
-      - Specification
-    tags_raw:
-      - API Blueprint
-      - API Design
-      - Documentation
-      - Open Source
-      - Specification
-    properties:
-      - type: Documentation
-        url: https://apiblueprint.org/documentation/
-      - type: GitHubRepository
-        url: https://github.com/apiaryio/api-blueprint
-      - type: Specification
-        url: https://apiblueprint.org/documentation/specification.html
+- aid: apiary:api-blueprint
+  name: API Blueprint
+  description: >-
+    API Blueprint is a high-level API design language created by Apiary for designing and documenting
+    web APIs. It uses a Markdown-based syntax that is human-readable and machine-parseable, enabling teams
+    to design APIs collaboratively and generate documentation, mock servers, and tests from a single source
+    of truth.
+  humanURL: https://apiblueprint.org
+  tags:
+  - API Blueprint
+  - API Design
+  - Documentation
+  - Open-Source
+  - Specification
+  tags_raw:
+  - API Blueprint
+  - API Design
+  - Documentation
+  - Open Source
+  - Specification
+  properties:
+  - type: Documentation
+    url: https://apiblueprint.org/documentation/
+  - type: GitHubRepository
+    url: https://github.com/apiaryio/api-blueprint
+  - type: Specification
+    url: https://apiblueprint.org/documentation/specification.html
+- aid: apiary:apiary-api-list-api
+  name: Apiary API List API
+  description: >-
+    Apiary API exposes lists of APIs. Your authorization token grants access to private and public, personal
+    and team API Projects.
+  humanURL: https://apiary.io
+  baseURL: https://api.apiary.io
+  tags:
+  - API List
+  properties:
+  - type: OpenAPI
+    url: openapi/apiary-api-list-api-openapi.yml
+  - type: Documentation
+    url: https://help.apiary.io
+  - type: GettingStarted
+    url: https://help.apiary.io/tools/apiary-cli/
+  - type: APIReference
+    url: https://apiary.docs.apiary.io
+  - type: JSONSchema
+    url: json-schema/apiary-user.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-api-list.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-token.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-token-list.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-error.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-api-project-created.schema.json
+- aid: apiary:apiary-authentication-api
+  name: Apiary Authentication API
+  description: >-
+    Apiary API uses Bearer Token Authorization (RFC 6750). Tokens are managed at https://login.apiary.io/tokens,
+    or created, listed and deleted over this resource using Basic Authentication. This collection works
+    only for users who are not part of IDCS-controlled teams.
+  humanURL: https://apiary.io
+  baseURL: https://api.apiary.io
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/apiary-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://help.apiary.io
+  - type: GettingStarted
+    url: https://help.apiary.io/tools/apiary-cli/
+  - type: APIReference
+    url: https://apiary.docs.apiary.io
+  - type: JSONSchema
+    url: json-schema/apiary-user.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-api-list.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-token.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-token-list.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-error.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-api-project-created.schema.json
+- aid: apiary:apiary-blueprint-api
+  name: Apiary Blueprint API
+  description: >-
+    Legacy API Blueprint utilities. These operations take the legacy `Authentication: Token <token>` header
+    rather than `Authorization: Bearer`.
+  humanURL: https://apiary.io
+  baseURL: https://api.apiary.io
+  tags:
+  - Blueprint
+  properties:
+  - type: OpenAPI
+    url: openapi/apiary-blueprint-api-openapi.yml
+  - type: Documentation
+    url: https://help.apiary.io
+  - type: GettingStarted
+    url: https://help.apiary.io/tools/apiary-cli/
+  - type: APIReference
+    url: https://apiary.docs.apiary.io
+  - type: JSONSchema
+    url: json-schema/apiary-user.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-api-list.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-token.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-token-list.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-error.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-api-project-created.schema.json
+- aid: apiary:apiary-user-information-api
+  name: Apiary User Information API
+  description: >-
+    Apiary API exposes authorized user information. You may only get your own user information.
+  humanURL: https://apiary.io
+  baseURL: https://api.apiary.io
+  tags:
+  - User Information
+  properties:
+  - type: OpenAPI
+    url: openapi/apiary-user-information-api-openapi.yml
+  - type: Documentation
+    url: https://help.apiary.io
+  - type: GettingStarted
+    url: https://help.apiary.io/tools/apiary-cli/
+  - type: APIReference
+    url: https://apiary.docs.apiary.io
+  - type: JSONSchema
+    url: json-schema/apiary-user.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-api-list.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-token.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-token-list.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-error.schema.json
+  - type: JSONSchema
+    url: json-schema/apiary-api-project-created.schema.json
 common:
+  - type: Overlay
+    url: overlays/apiary-apiary-api-overlay.yaml
   - type: Authentication
     url: authentication/apiary-authentication.yml
   - type: Packages
