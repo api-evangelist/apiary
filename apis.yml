@@ -154,6 +154,8 @@ apis:
   humanURL: https://apiary.io
   baseURL: https://api.apiary.io
   tags:
+  - Blueprints
+  tags_raw:
   - Blueprint
   properties:
   - type: OpenAPI
