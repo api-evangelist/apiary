@@ -1,0 +1,232 @@
+openapi: 3.2.0
+info:
+  title: Apiary Blueprint API
+  version: '2020-03-02'
+  summary: Apiary loves APIs. Of course then, we have an API too.
+  description: The Apiary API is Apiary.io's own public API.
+  contact:
+    name: Apiary Support
+    email: support@apiary.io
+    url: https://help.apiary.io
+  license:
+    name: Proprietary — Oracle Cloud Infrastructure
+    url: https://apiary.io/tos
+  termsOfService: https://apiary.io/tos
+  x-apiary-description-format: apiblueprint
+  x-apiary-last-updated: '2020-03-02T13:09:52.558Z'
+  x-provenance:
+    generated: '2026-09-02'
+    method: derived
+    source: https://jsapi.apiary.io/apis/apiary
+    source_http_status: 200
+    source_saved_verbatim: api-description/apiary-api-description.json
+    note: 'Derived from Apiary''s own published API description document, fetched from Apiary''s own host (jsapi.apiary.io) and describing Apiary''s own production host (https://api.apiary.io/). Ownership is unambiguous: the description names itself "Apiary API", is owned by the Apiary account, declares production base https://api.apiary.io/, and lists support@apiary.io. Apiary publishes no OpenAPI/Swagger of its own — /openapi.json, /openapi.yaml, /swagger.json, /api-docs, /docs and /redoc all return 404 on api.apiary.io (probed 2026-09-02) — so this document is a translation, not a harvest.'
+servers:
+- url: https://api.apiary.io
+  description: Production
+tags:
+- name: Blueprint
+  description: 'Legacy API Blueprint utilities. These operations take the legacy `Authentication: Token ` header rather than `Authorization: Bearer`.'
+paths:
+  /blueprint/create:
+    post:
+      operationId: createApiProject
+      summary: Create API Project
+      description: Create a new API Project from an API description document. If the `desiredName` is already taken, a different `domain` will be generated for your API Project; it can be changed later in the project settings.
+      tags:
+      - Blueprint
+      security:
+      - legacyToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - personal
+                  - team
+                  description: Whether the API Project is personal or belongs to a team.
+                public:
+                  type: boolean
+                  description: Whether the API Project is publicly visible.
+                desiredName:
+                  type: string
+                  description: The desired API subdomain.
+                code:
+                  type: string
+                  description: The API description document source (API Blueprint or Swagger/OpenAPI).
+            example:
+              type: personal
+              public: true
+              desiredName: apisubdomain
+              code: 'FORMAT: 1A
+
+                # API
+
+                '
+      responses:
+        '201':
+          description: API Project created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiProjectCreated'
+  /blueprint/get/{apiSubdomain}:
+    parameters:
+    - name: apiSubdomain
+      in: path
+      required: true
+      description: An API subdomain.
+      schema:
+        type: string
+      example: publicpersonalapi
+    get:
+      operationId: fetchBlueprint
+      summary: Fetch Blueprint
+      description: 'Fetch the API description document (API Blueprint or Swagger) for a particular API Project. Legacy — takes the `Authentication: Token ` header.'
+      tags:
+      - Blueprint
+      security:
+      - legacyToken: []
+      responses:
+        '200':
+          description: The API description document source.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlueprintEnvelope'
+        '500':
+          description: Internal Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyError'
+        '503':
+          description: Infrastructure problem; please retry in a while.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyError'
+  /blueprint/publish/{apiSubdomain}:
+    parameters:
+    - name: apiSubdomain
+      in: path
+      required: true
+      description: An API subdomain.
+      schema:
+        type: string
+      example: publicpersonalapi
+    post:
+      operationId: publishBlueprint
+      summary: Publish Blueprint
+      description: 'Publish an API description document for a particular API Project, replacing the currently published revision. Legacy — takes the `Authentication: Token ` header.'
+      tags:
+      - Blueprint
+      security:
+      - legacyToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - code
+              properties:
+                code:
+                  type: string
+                  description: The API description document source to publish.
+            example:
+              code: 'FORMAT: X-1A
+
+                HOST: http://api.example.com/
+
+
+                # Example API
+
+
+                Introduction.
+
+                '
+      responses:
+        '201':
+          description: Published. Empty JSON object.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyError'
+        '503':
+          description: Infrastructure problem; please retry in a while.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegacyError'
+components:
+  schemas:
+    ApiProjectCreated:
+      type: object
+      properties:
+        status:
+          type: string
+          examples:
+          - created
+        domain:
+          type: string
+          description: The API subdomain that was actually assigned.
+          examples:
+          - apiprojectsubdomain
+        url:
+          type: string
+          format: uri
+          examples:
+          - https://apiprojectsubdomain.docs.apiary.io
+    BlueprintEnvelope:
+      type: object
+      properties:
+        error:
+          type: boolean
+        message:
+          type: string
+        code:
+          type: string
+          description: The API description document source.
+    LegacyError:
+      type: object
+      description: The error envelope used by the legacy /blueprint/* group — a boolean flag plus free-text message.
+      properties:
+        error:
+          type: boolean
+        message:
+          type: string
+      examples:
+      - error: true
+        message: Internal Error.
+      - error: true
+        message: Infrastructure problem; please retry in a while.
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with the Apiary account email and password. Used only on /authorization to mint, list and revoke tokens. Not available to users in IDCS-controlled teams.
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'RFC 6750 Bearer token. Generate at https://login.apiary.io/tokens or via POST /authorization. Sent as `Authorization: Bearer <token>`.'
+    legacyToken:
+      type: apiKey
+      in: header
+      name: Authentication
+      description: 'Legacy Apiary token header, sent as `Authentication: Token <token>` (note: the header is `Authentication`, not `Authorization`). Apiary labels the /blueprint/* group legacy. This is the same token value the Apiary CLI reads from the APIARY_API_KEY environment variable.'
+externalDocs:
+  description: Apiary API interactive documentation (Apiary-hosted)
+  url: https://apiary.docs.apiary.io

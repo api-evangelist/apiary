@@ -1,0 +1,224 @@
+openapi: 3.2.0
+info:
+  title: Apiary Authentication API
+  version: '2020-03-02'
+  summary: Apiary loves APIs. Of course then, we have an API too.
+  description: The Apiary API is Apiary.io's own public API.
+  contact:
+    name: Apiary Support
+    email: support@apiary.io
+    url: https://help.apiary.io
+  license:
+    name: Proprietary — Oracle Cloud Infrastructure
+    url: https://apiary.io/tos
+  termsOfService: https://apiary.io/tos
+  x-apiary-description-format: apiblueprint
+  x-apiary-last-updated: '2020-03-02T13:09:52.558Z'
+  x-provenance:
+    generated: '2026-09-02'
+    method: derived
+    source: https://jsapi.apiary.io/apis/apiary
+    source_http_status: 200
+    source_saved_verbatim: api-description/apiary-api-description.json
+    note: 'Derived from Apiary''s own published API description document, fetched from Apiary''s own host (jsapi.apiary.io) and describing Apiary''s own production host (https://api.apiary.io/). Ownership is unambiguous: the description names itself "Apiary API", is owned by the Apiary account, declares production base https://api.apiary.io/, and lists support@apiary.io. Apiary publishes no OpenAPI/Swagger of its own — /openapi.json, /openapi.yaml, /swagger.json, /api-docs, /docs and /redoc all return 404 on api.apiary.io (probed 2026-09-02) — so this document is a translation, not a harvest.'
+servers:
+- url: https://api.apiary.io
+  description: Production
+tags:
+- name: Authentication
+  description: Apiary API uses Bearer Token Authorization (RFC 6750). Tokens are managed at https://login.apiary.io/tokens, or created, listed and deleted over this resource using Basic Authentication. This collection works only for users who are not part of IDCS-controlled teams.
+  externalDocs:
+    url: https://login.apiary.io/tokens
+paths:
+  /authorization:
+    post:
+      operationId: createAuthorizationToken
+      summary: Create an Authorization Token
+      description: Create a new authorization token for an authenticated user. This authorization token may be used to access protected resources. Pass `tokenRegenerate=true` to regenerate a token that already exists under the same description.
+      tags:
+      - Authentication
+      security:
+      - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - tokenDescription
+              properties:
+                tokenDescription:
+                  type: string
+                  maxLength: 30
+                  description: A string, 30 characters or less, describing the token.
+                tokenRegenerate:
+                  type: boolean
+                  default: false
+                  description: Regenerate the token if one already exists with this description.
+            example:
+              tokenDescription: What's this token for?
+              tokenRegenerate: false
+      responses:
+        '201':
+          description: Token created (or regenerated).
+          headers:
+            Location:
+              description: URL of the newly created token resource.
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          description: Token Description Missing, Token Description Length Greater Than 30, or Token Description Already Exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Transport Layer Security Required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      operationId: listAuthorizationTokens
+      summary: Get Existing Authorization Tokens
+      description: Get existing authorization tokens for an authenticated user. Token values themselves are not returned — only their descriptions and resource URLs.
+      tags:
+      - Authentication
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          description: The caller's token list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenList'
+        '401':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Transport Layer Security Required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: deleteAuthorizationToken
+      summary: Delete an Existing Authorization Token
+      description: Delete an existing authorization token for an authenticated user. The token may no longer be used to access protected resources. The token to delete is identified by its description, either form-encoded in the body or percent-encoded as a path segment on the token URL.
+      tags:
+      - Authentication
+      security:
+      - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - tokenDescription
+              properties:
+                tokenDescription:
+                  type: string
+                  maxLength: 30
+                  description: The description identifying the token to delete.
+            example:
+              tokenDescription: What's this token for?
+      responses:
+        '204':
+          description: Token deleted. No content.
+        '400':
+          description: Token Description Missing, or Token Description Length Greater Than 30.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Transport Layer Security Required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    TokenList:
+      type: object
+      properties:
+        tokens:
+          type: array
+          description: A list of Tokens.
+          items:
+            $ref: '#/components/schemas/Token'
+    Error:
+      type: object
+      description: The Apiary API error envelope — a single `error` string drawn from a closed enum.
+      properties:
+        error:
+          type: string
+          description: An error message.
+          enum:
+          - Unauthorized
+          - Transport Layer Security Required
+          - Token Invalid
+          - Token Description Length Greater Than 30
+          - Token Description Missing
+          - Token Description Already Exists
+          - Token Creation Failed
+          - Token Deletion Failed
+          - Token Retrieval Failed
+          - User Query Failed
+          - API Query Failed
+          - Team ID Invalid
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          description: A string granting a user authorization to protected resources.
+        tokenDescription:
+          type: string
+          maxLength: 30
+          description: A string, 30 characters or less, describing the token.
+        tokenUrl:
+          type: string
+          format: uri
+          description: A URL string representing a token resource.
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with the Apiary account email and password. Used only on /authorization to mint, list and revoke tokens. Not available to users in IDCS-controlled teams.
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'RFC 6750 Bearer token. Generate at https://login.apiary.io/tokens or via POST /authorization. Sent as `Authorization: Bearer <token>`.'
+    legacyToken:
+      type: apiKey
+      in: header
+      name: Authentication
+      description: 'Legacy Apiary token header, sent as `Authentication: Token <token>` (note: the header is `Authentication`, not `Authorization`). Apiary labels the /blueprint/* group legacy. This is the same token value the Apiary CLI reads from the APIARY_API_KEY environment variable.'
+externalDocs:
+  description: Apiary API interactive documentation (Apiary-hosted)
+  url: https://apiary.docs.apiary.io

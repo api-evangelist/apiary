@@ -1,0 +1,26 @@
+{
+  "provider": "apiary",
+  "sources": [
+    "_original/apiary-apiary-api-openapi.yml"
+  ],
+  "outputs": [
+    "apiary-api-list-api-openapi.yml",
+    "apiary-authentication-api-openapi.yml",
+    "apiary-blueprint-api-openapi.yml",
+    "apiary-user-information-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "apiary-apiary-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "apiary-api-list-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiary-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiary-blueprint-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiary-user-information-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

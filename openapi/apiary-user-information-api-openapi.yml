@@ -1,0 +1,133 @@
+openapi: 3.2.0
+info:
+  title: Apiary User Information API
+  version: '2020-03-02'
+  summary: Apiary loves APIs. Of course then, we have an API too.
+  description: The Apiary API is Apiary.io's own public API.
+  contact:
+    name: Apiary Support
+    email: support@apiary.io
+    url: https://help.apiary.io
+  license:
+    name: Proprietary — Oracle Cloud Infrastructure
+    url: https://apiary.io/tos
+  termsOfService: https://apiary.io/tos
+  x-apiary-description-format: apiblueprint
+  x-apiary-last-updated: '2020-03-02T13:09:52.558Z'
+  x-provenance:
+    generated: '2026-09-02'
+    method: derived
+    source: https://jsapi.apiary.io/apis/apiary
+    source_http_status: 200
+    source_saved_verbatim: api-description/apiary-api-description.json
+    note: 'Derived from Apiary''s own published API description document, fetched from Apiary''s own host (jsapi.apiary.io) and describing Apiary''s own production host (https://api.apiary.io/). Ownership is unambiguous: the description names itself "Apiary API", is owned by the Apiary account, declares production base https://api.apiary.io/, and lists support@apiary.io. Apiary publishes no OpenAPI/Swagger of its own — /openapi.json, /openapi.yaml, /swagger.json, /api-docs, /docs and /redoc all return 404 on api.apiary.io (probed 2026-09-02) — so this document is a translation, not a harvest.'
+servers:
+- url: https://api.apiary.io
+  description: Production
+tags:
+- name: User Information
+  description: Apiary API exposes authorized user information. You may only get your own user information.
+paths:
+  /me:
+    get:
+      operationId: getMe
+      summary: Get Me
+      description: Get your user information. A valid authorization token must be used to access this information. You may only get your own user information.
+      tags:
+      - User Information
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: The authenticated user, with the teams they belong to.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Token Invalid.
+          headers:
+            WWW-Authenticate:
+              description: Bearer error="invalid_token"
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Transport Layer Security Required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Team:
+      type: object
+      properties:
+        teamId:
+          type: string
+          description: The team ID.
+        teamName:
+          type: string
+          description: The team name.
+        teamApisUrl:
+          type: string
+          format: uri
+          description: A URL string representing an API list resource of team APIs you may access.
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The user ID.
+        userName:
+          type: string
+          description: The user name.
+        userApisUrl:
+          type: string
+          format: uri
+          description: A URL string representing an API list resource of APIs you may access.
+        teams:
+          type: array
+          description: A list of Teams.
+          items:
+            $ref: '#/components/schemas/Team'
+    Error:
+      type: object
+      description: The Apiary API error envelope — a single `error` string drawn from a closed enum.
+      properties:
+        error:
+          type: string
+          description: An error message.
+          enum:
+          - Unauthorized
+          - Transport Layer Security Required
+          - Token Invalid
+          - Token Description Length Greater Than 30
+          - Token Description Missing
+          - Token Description Already Exists
+          - Token Creation Failed
+          - Token Deletion Failed
+          - Token Retrieval Failed
+          - User Query Failed
+          - API Query Failed
+          - Team ID Invalid
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication with the Apiary account email and password. Used only on /authorization to mint, list and revoke tokens. Not available to users in IDCS-controlled teams.
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'RFC 6750 Bearer token. Generate at https://login.apiary.io/tokens or via POST /authorization. Sent as `Authorization: Bearer <token>`.'
+    legacyToken:
+      type: apiKey
+      in: header
+      name: Authentication
+      description: 'Legacy Apiary token header, sent as `Authentication: Token <token>` (note: the header is `Authentication`, not `Authorization`). Apiary labels the /blueprint/* group legacy. This is the same token value the Apiary CLI reads from the APIARY_API_KEY environment variable.'
+externalDocs:
+  description: Apiary API interactive documentation (Apiary-hosted)
+  url: https://apiary.docs.apiary.io
