@@ -73,7 +73,7 @@ apis:
   - API Blueprint
   - API Design
   - Documentation
-  - Open-Source
+  - Open Source
   - Specification
   tags_raw:
   - API Blueprint
@@ -81,6 +81,7 @@ apis:
   - Documentation
   - Open Source
   - Specification
+  - Open-Source
   properties:
   - type: Documentation
     url: https://apiblueprint.org/documentation/

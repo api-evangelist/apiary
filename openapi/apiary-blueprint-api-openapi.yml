@@ -190,16 +190,6 @@ components:
           format: uri
           examples:
           - https://apiprojectsubdomain.docs.apiary.io
-    BlueprintEnvelope:
-      type: object
-      properties:
-        error:
-          type: boolean
-        message:
-          type: string
-        code:
-          type: string
-          description: The API description document source.
     LegacyError:
       type: object
       description: The error envelope used by the legacy /blueprint/* group — a boolean flag plus free-text message.
@@ -213,6 +203,16 @@ components:
         message: Internal Error.
       - error: true
         message: Infrastructure problem; please retry in a while.
+    BlueprintEnvelope:
+      type: object
+      properties:
+        error:
+          type: boolean
+        message:
+          type: string
+        code:
+          type: string
+          description: The API description document source.
   securitySchemes:
     basicAuth:
       type: http
