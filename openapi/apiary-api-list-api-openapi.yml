@@ -110,6 +110,31 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Api:
+      type: object
+      properties:
+        apiName:
+          type: string
+          description: The API name.
+        apiDocumentationUrl:
+          type: string
+          format: uri
+          description: A URL string representing a documentation resource for an API.
+        apiSubdomain:
+          type: string
+          description: The subdomain for the API.
+        apiIsPrivate:
+          type: boolean
+          description: Is the API private?
+        apiIsPublic:
+          type: boolean
+          description: Is the API public?
+        apiIsTeam:
+          type: boolean
+          description: Is the API a team API?
+        apiIsPersonal:
+          type: boolean
+          description: Is the API a personal API?
     Error:
       type: object
       description: The Apiary API error envelope — a single `error` string drawn from a closed enum.
@@ -138,31 +163,6 @@ components:
           description: A list of APIs.
           items:
             $ref: '#/components/schemas/Api'
-    Api:
-      type: object
-      properties:
-        apiName:
-          type: string
-          description: The API name.
-        apiDocumentationUrl:
-          type: string
-          format: uri
-          description: A URL string representing a documentation resource for an API.
-        apiSubdomain:
-          type: string
-          description: The subdomain for the API.
-        apiIsPrivate:
-          type: boolean
-          description: Is the API private?
-        apiIsPublic:
-          type: boolean
-          description: Is the API public?
-        apiIsTeam:
-          type: boolean
-          description: Is the API a team API?
-        apiIsPersonal:
-          type: boolean
-          description: Is the API a personal API?
   securitySchemes:
     basicAuth:
       type: http

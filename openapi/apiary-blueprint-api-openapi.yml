@@ -173,23 +173,6 @@ paths:
                 $ref: '#/components/schemas/LegacyError'
 components:
   schemas:
-    ApiProjectCreated:
-      type: object
-      properties:
-        status:
-          type: string
-          examples:
-          - created
-        domain:
-          type: string
-          description: The API subdomain that was actually assigned.
-          examples:
-          - apiprojectsubdomain
-        url:
-          type: string
-          format: uri
-          examples:
-          - https://apiprojectsubdomain.docs.apiary.io
     LegacyError:
       type: object
       description: The error envelope used by the legacy /blueprint/* group — a boolean flag plus free-text message.
@@ -213,6 +196,23 @@ components:
         code:
           type: string
           description: The API description document source.
+    ApiProjectCreated:
+      type: object
+      properties:
+        status:
+          type: string
+          examples:
+          - created
+        domain:
+          type: string
+          description: The API subdomain that was actually assigned.
+          examples:
+          - apiprojectsubdomain
+        url:
+          type: string
+          format: uri
+          examples:
+          - https://apiprojectsubdomain.docs.apiary.io
   securitySchemes:
     basicAuth:
       type: http
