@@ -186,16 +186,6 @@ components:
         message: Internal Error.
       - error: true
         message: Infrastructure problem; please retry in a while.
-    BlueprintEnvelope:
-      type: object
-      properties:
-        error:
-          type: boolean
-        message:
-          type: string
-        code:
-          type: string
-          description: The API description document source.
     ApiProjectCreated:
       type: object
       properties:
@@ -213,6 +203,16 @@ components:
           format: uri
           examples:
           - https://apiprojectsubdomain.docs.apiary.io
+    BlueprintEnvelope:
+      type: object
+      properties:
+        error:
+          type: boolean
+        message:
+          type: string
+        code:
+          type: string
+          description: The API description document source.
   securitySchemes:
     basicAuth:
       type: http
