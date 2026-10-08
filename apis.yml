@@ -212,6 +212,8 @@ apis:
   - type: JSONSchema
     url: json-schema/apiary-api-project-created.schema.json
 common:
+  - type: FinOps
+    url: finops/apiary-finops.yml
   - type: Overlay
     url: overlays/apiary-apiary-api-overlay.yaml
   - type: Authentication
