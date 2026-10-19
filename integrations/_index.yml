@@ -54,3 +54,110 @@
     builder: Pipedream repo (component)
   status: not-a-workflow
   arazzo: null
+- slug: apiary-npm-registry
+  label: npm registry
+  partner: npm
+  partner_name: npm registry
+  category: official SDK (JavaScript/TypeScript)
+  type: register
+  channel: package-registry
+  evidence: https://www.npmjs.com/package/api-elements
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: api-elements
+      version: 0.3.2
+      released: '2022-06-28'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/api-elements
+      repo_leg: shared-github-org:apiaryio
+      publisher_leg: email:apiary.io
+      matched_by: domain+name-among-holders
+    - name: drafter
+      version: 2.0.0
+      released: '2022-06-15'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/drafter
+      repo_leg: shared-github-org:apiaryio
+      publisher_leg: email:apiary.io
+      matched_by: domain+name-among-holders
+    - name: dredd
+      version: 14.1.0
+      released: '2023-02-13'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/dredd
+      repo_leg: shared-github-org:apiaryio
+      publisher_leg: email:apiary.io
+      matched_by: domain+name-among-holders
+    - name: dredd-transactions
+      version: 10.1.0
+      released: '2022-06-16'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/dredd-transactions
+      repo_leg: shared-github-org:apiaryio
+      publisher_leg: email:apiary.io
+      matched_by: domain+name-among-holders
+    - name: gavel
+      version: 10.0.4
+      released: '2022-06-30'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/gavel
+      repo_leg: shared-github-org:apiaryio
+      publisher_leg: email:apiary.io
+      matched_by: domain+name-among-holders
+    - name: protagonist
+      version: 2.3.0
+      released: '2023-07-28'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/protagonist
+      repo_leg: shared-github-org:apiaryio
+      publisher_leg: email:apiary.io
+      matched_by: domain+name-among-holders
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
+- slug: apiary-pypi
+  label: PyPI
+  partner: pypi
+  partner_name: PyPI
+  category: official SDK (Python)
+  type: register
+  channel: package-registry
+  evidence: https://pypi.org/project/dredd_hooks/
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public registry JSON)
+    spec_file: null
+    language: Python
+    packages:
+    - name: dredd_hooks
+      version: 0.2.0
+      released: '2018-04-09'
+      released_field: upload_time
+      lapsed: true
+      page: https://pypi.org/project/dredd_hooks/
+      repo_leg: shared-github-org:apiaryio
+      publisher_leg: email:apiary.io
+      matched_by: domain+name-among-holders
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
