@@ -1,4 +1,4 @@
-# Apiary (apiary)
+# Apiary
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,88 +66,136 @@
 
 Apiary is an API design and documentation platform, now part of Oracle Cloud Infrastructure. With 486,000+ users and 591,000+ APIs managed, it uses API Blueprint and Swagger/OpenAPI specifications to produce interactive API documentation, mock servers, automated testing, and collaborative API design workflows. Apiary enables teams to design APIs before writing code, generate documentation automatically, and validate implementations against specifications.
 
-**URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/apiary/refs/heads/main/apis.yml)
+**Areas:** API Blueprint · API Design · API Testing · Collaboration · Design-First · Documentation · Mock Servers · Oracle
 
-**Run:** [Capabilities Using Naftiko](https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=company-api-evangelist&utm_content=repo)
+## Apiary on APIs.io
 
-## Tags:
+Everything profiled for Apiary is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/apiary/](https://apis.io/providers/apiary/)** — or go straight to one of the APIs or properties below.
 
- - API Blueprint, API Design, API Testing, Collaboration, Design First, Documentation, Mock Servers, Oracle
+### APIs (5)
 
-## Timestamps
+- [API Blueprint](https://apis.io/apis/apiary/api-blueprint/) — API Blueprint is a high-level API design language created by Apiary for designing and documenting web APIs. It uses a Markdown-based syntax that is…
+- [Apiary API List API](https://apis.io/apis/apiary/apiary-api-list-api/) — Apiary API exposes lists of APIs. Your authorization token grants access to private and public, personal and team API Projects.
+- [Apiary Authentication API](https://apis.io/apis/apiary/apiary-authentication-api/) — Apiary API uses Bearer Token Authorization (RFC 6750). Tokens are managed at https://login.apiary.io/tokens, or created, listed and deleted over this…
+- [Apiary Blueprint API](https://apis.io/apis/apiary/apiary-blueprint-api/) — Legacy API Blueprint utilities. These operations take the legacy `Authentication: Token <token>` header rather than `Authorization: Bearer`.
+- [Apiary User Information API](https://apis.io/apis/apiary/apiary-user-information-api/) — Apiary API exposes authorized user information. You may only get your own user information.
 
-- **Created:** 2026-03-25
-- **Modified:** 2026-04-19
+### Published properties
 
-## APIs
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-### Apiary API
-The Apiary API provides programmatic access to manage API projects, documentation, and team collaboration. It allows creating and updating API Blueprint and Swagger/OpenAPI documents, managing team members, and integrating Apiary workflows into CI/CD pipelines.
+#### MCP servers (1)
 
-**Human URL:** [https://apiary.io](https://apiary.io)
+Model Context Protocol servers that expose the API to agents.
 
-#### Tags:
+- [apiary-mcp.yml](https://apis.io/servers/apiary/apiary-mcp-yml/)
 
- - API Blueprint, API Design, Collaboration, Documentation, Mock Servers
+#### JSON Schema (6)
 
-#### Properties
+The data models the API reads and writes.
 
-- [Documentation](https://help.apiary.io)
-- [GettingStarted](https://help.apiary.io/tools/apiary-cli/)
+- [Apiary Api List.Schema](https://apis.io/schemas/apiary/apiary-api-list.schema/)
+- [Apiary Api Project Created.Schema](https://apis.io/schemas/apiary/apiary-api-project-created.schema/)
+- [Apiary Error.Schema](https://apis.io/schemas/apiary/apiary-error.schema/)
+- [Apiary Token List.Schema](https://apis.io/schemas/apiary/apiary-token-list.schema/)
+- [Apiary Token.Schema](https://apis.io/schemas/apiary/apiary-token.schema/)
+- [Apiary User.Schema](https://apis.io/schemas/apiary/apiary-user.schema/)
 
-### API Blueprint
-API Blueprint is a high-level API design language created by Apiary for designing and documenting web APIs. It uses a Markdown-based syntax that is human-readable and machine-parseable, enabling teams to design APIs collaboratively and generate documentation, mock servers, and tests from a single source of truth.
+#### Overlays (1)
 
-**Human URL:** [https://apiblueprint.org](https://apiblueprint.org)
+OpenAPI overlays, including conversational phrasing for each operation.
 
-#### Tags:
+- [Apiary Apiary Api Overlay](https://apis.io/overlays/apiary/apiary-apiary-api-overlay/)
 
- - API Blueprint, API Design, Documentation, Open Source, Specification
+#### Security (2)
 
-#### Properties
+Authentication, trust centre, and vulnerability disclosure.
 
-- [Documentation](https://apiblueprint.org/documentation/)
-- [GitHubRepository](https://github.com/apiaryio/api-blueprint)
-- [Specification](https://apiblueprint.org/documentation/specification.html)
+- [Apiary Authentication](https://apis.io/security/apiary/apiary-authentication/)
+- [Apiary Domain Security](https://apis.io/security/apiary/apiary-domain-security/)
 
-## Common Properties
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Apiary Plans Pricing](https://apis.io/plans/apiary/apiary-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Apiary Rate Limits](https://apis.io/rate-limits/apiary/apiary-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Apiary Finops](https://apis.io/finops/apiary/apiary-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://apiary.io)
 - [Documentation](https://help.apiary.io)
-- [GitHubOrganization](https://github.com/apiaryio)
-- [Blog](https://blog.apiary.io)
 - [Pricing](https://apiary.io/plans)
-- [Login](https://login.apiary.io)
-- [SignUp](https://login.apiary.io/register)
 - [Support](https://help.apiary.io)
-- [PrivacyPolicy](https://www.oracle.com/legal/privacy/)
-- [TermsOfService](https://www.oracle.com/legal/terms.html)
+- [Blog](https://blog.apiary.io)
+- [Terms of service](https://apiary.io/tos)
+- [Privacy policy](https://apiary.io/privacy)
+- [GitHub](https://github.com/apiaryio)
 
-## Features
+## API Evangelist rating
 
-| Name | Description |
-|------|-------------|
-| API Blueprint Support | Native support for API Blueprint, a high-level Markdown-based API description language for collaborative design. |
-| OpenAPI/Swagger Support | Import and work with Swagger and OpenAPI specifications alongside API Blueprint documents. |
-| Interactive API Documentation | Auto-generate interactive documentation from API specs with a built-in API console for live testing. |
-| Mock Servers | Instant mock servers generated from API specs allowing frontend development before backend is ready. |
-| Automated API Testing | Run automated tests against API implementations using Dredd, the open-source API testing framework. |
-| Collaborative Workflows | Team-based API design with version history, commenting, and shared workspaces. |
-| CLI Integration | Apiary CLI for integrating API design and testing workflows into CI/CD pipelines. |
-| Open Source Tooling | Maintains Dredd (testing), Gavel (validation), and API Blueprint as open-source projects. |
+**Kin Score 42.6** — developing · rubric 0.25.0 · scored 2026-10-23
 
-## Use Cases
+| Facet | Score |
+|---|---|
+| Discoverability | 57.1 |
+| Contract quality | 19.8 |
+| Contract governance | 4.5 |
+| Operational transparency | 39.5 |
+| Developer ergonomics | 67.3 |
+| Access clarity | 69.7 |
 
-| Name | Description |
-|------|-------------|
-| Design-First API Development | Design APIs in API Blueprint or OpenAPI before writing code, enabling parallel frontend and backend development. |
-| API Documentation Generation | Automatically generate interactive API documentation from API specifications for developer consumption. |
-| Mock Server Prototyping | Generate instant mock servers from specs to enable frontend development without a live backend. |
-| Contract Testing | Validate API implementations against their specifications using Dredd to catch regressions. |
-| Team API Governance | Collaborate on API design standards and review API changes in a shared workspace. |
+**Agent readiness 28.7** — agent-ready
 
-## Maintainers
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
 
-**FN:** Kin Lane
+**Regulatory alignment 24.5** — Horizontal (data, software, accessibility, platform)
 
-**Email:** kin@apievangelist.com
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/apiary/](https://apis.io/providers/apiary/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Apiary: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/apiary/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
