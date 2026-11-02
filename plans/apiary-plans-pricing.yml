@@ -1,0 +1,64 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://apiary.io/plans
+sources:
+- https://apiary.io/plans
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T161713
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: negotiated
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-10-28'
+  managed_tier: Standard
+published: false
+note: No numeric price is published on the pricing page; Plan comparison page listing Free/Standard/Pro
+  feature sets; no numeric prices shown anywhere on the page.
+plan_count: 3
+plans:
+- name: Free
+  price_text: Free
+  period: none
+  included_quota: 5 per API Project collaborators, Unlimited API Projects, Basic GitHub Sync
+- name: Standard
+  price_text: Standard
+  period: none
+  included_quota: 10 per API Project collaborators, team management, private API projects
+- name: Pro
+  price_text: Pro
+  period: none
+  included_quota: Unlimited team members, advanced GitHub integration, style guide rules, priority support
+rate_limit_statements:
+- Viewers (read-only role) of private API projects are capped at 50 in Standard plans—this limit can be
+  raised in custom Pro plans.
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models: []
+  units: []
+  plans:
+  - name: Free
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Standard
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Pro
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
