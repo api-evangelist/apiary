@@ -36,7 +36,7 @@ rate_limit_statements:
 - Viewers (read-only role) of private API projects are capped at 50 in Standard plans—this limit can be
   raised in custom Pro plans.
 x-canonical:
-  generated: '2026-11-01'
+  generated: '2026-11-02'
   vocabulary: engine/economics/plans-canonical.yml
   models: []
   units: []
